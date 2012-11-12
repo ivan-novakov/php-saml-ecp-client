@@ -2,10 +2,12 @@
 
 namespace Saml\Ecp\Client;
 
+use Saml\Ecp\Response\SpConveyAuthnResponse;
 use Saml\Ecp\Response\Response;
 use Saml\Ecp\Response\IdpAuthnResponse;
 use Saml\Ecp\Response\ResponseInterface;
 use Saml\Ecp\Response\SpInitialResponse;
+use Saml\Ecp\Response\SpResourceResponse;
 use Saml\Ecp\Request\RequestInterface;
 use Saml\Ecp\Request\RequestFactory;
 use Saml\Ecp\Exception as GeneralException;
@@ -158,42 +160,25 @@ class Client
         $requestFactory = $this->getRequestFactory();
         
         // send PAOS request to SP
-        $initialSpRequest = $requestFactory->createSpInitialRequest();
-        $initialSpResponse = $this->sendInitialRequestToSp($initialSpRequest);
-        
-        try {
-            $initialSpResponse->validate();
-        } catch (\Exception $e) {
-            _dump("$e");
-            return;
-        }
-        
-        // process response from SP
-        $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($initialSpResponse, $discoveryMethod->getIdpEcpEndpoint());
+        $spInitialRequest = $requestFactory->createSpInitialRequest();
+        $spInitialResponse = $this->sendInitialRequestToSp($spInitialRequest);
+        $spInitialResponse->validate();
         
         // send authn request to IdP
+        $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($spInitialResponse, $discoveryMethod->getIdpEcpEndpoint());
         $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
+        $idpAuthnResponse->validate();
         
-        try {
-            $idpAuthnResponse->validate();
-        } catch (\Exception $e) {
-            _dump("$e");
-            return;
-        }
-        
-        // process response from IdP - validate (!)
+        // convey the authn response back to the SP
         $spConveyRequest = $requestFactory->createSpAuthnConveyRequest($idpAuthnResponse, $idpAuthnResponse->getConsumerEndpointUrl());
+        $spConveyResponse = $this->sendAuthnResponseToSp($spConveyRequest);
+        $spConveyResponse->validate();
         
-        $response = $this->sendAuthnResponseToSp($spConveyRequest);
+        // access protected resource
+        $spResourceRequest = $requestFactory->createSpResourceRequest($this->getProtectedContentUri());
+        $spResourceResponse = $this->sendResourceRequestToSp($spResourceRequest);
         
-        $uri = $this->getProtectedContentUri();
-        //_dump($uri);
-        $hr = new \Zend\Http\Request();
-        $hr->setUri($uri);
-        $hresp = $this->getHttpClient()
-            ->send($hr);
-        
-        _dump((string) $hresp);
+        return $spResourceResponse;
     }
 
 
@@ -249,7 +234,22 @@ class Client
         /* @var $request \Saml\Ecp\Request\SpConveyAuthnRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new Response($httpResponse);
+        return new SpConveyAuthnResponse($httpResponse);
+    }
+
+
+    /**
+     * After successful authentication sends a request for the protected resource to the SP.
+     * 
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     */
+    public function sendResourceRequestToSp (RequestInterface $request)
+    {
+        /* @var $request \Saml\Ecp\Request\SpResourceRequest */
+        $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
+        
+        return new SpResourceResponse($httpResponse);
     }
     
     /*

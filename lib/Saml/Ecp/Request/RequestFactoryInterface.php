@@ -35,4 +35,13 @@ interface RequestFactoryInterface
      * @return RequestInterface
      */
     public function createSpAuthnConveyRequest (ContainerInterface $soapContainer, $spEndpointUrl);
+
+
+    /**
+     * Creates a resource request to the SP.
+     * 
+     * @param string $resourceUri
+     * @return RequestInterface
+     */
+    public function createSpResourceRequest ($resourceUri);
 }

@@ -18,12 +18,14 @@ class SpInitialResponse extends Response
         $contentType = $httpResponse->getHeaders()
             ->get('Content-Type');
         
-        if (! $contentType) {
-            throw new Exception\InvalidResponseException('Unknown content type');
+        if (! $contentType || $contentType->getFieldValue() != MimeType::PAOS) {
+            throw new Exception\InvalidContentTypeException($contentType);
         }
         
-        if ($contentType->getFieldValue() != MimeType::PAOS) {
-            throw new Exception\InvalidContentTypeException($contentType);
+        try {
+            $soapMessage = $this->getSoapMessage();
+        } catch (\Exception $e) {
+            throw new Exception\MissingSoapMessageException(sprintf("Error loading SOAP message: [%s] %s", get_class($e), $e->getMessage()));
         }
     }
 }

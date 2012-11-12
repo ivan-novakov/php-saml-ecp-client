@@ -48,4 +48,18 @@ class RequestFactory implements RequestFactoryInterface
         
         return $request;
     }
+
+
+    /**
+     * (non-PHPdoc)
+     * @see \Saml\Ecp\Request\RequestFactoryInterface::createSpResourceRequest()
+     * @return SpResourceRequest
+     */
+    public function createSpResourceRequest ($resourceUri)
+    {
+        $request = new SpResourceRequest();
+        $request->setUri($resourceUri);
+        
+        return $request;
+    }
 }
