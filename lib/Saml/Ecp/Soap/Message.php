@@ -2,6 +2,8 @@
 
 namespace Saml\Ecp\Soap;
 
+use Zend\Stdlib\ErrorHandler;
+
 
 class Message
 {
@@ -48,9 +50,14 @@ class Message
      */
     public function fromString ($soapData)
     {
-        // FIXME try-catch
-        $this->getDom()
-            ->loadXML($soapData);
+        try {
+            ErrorHandler::start();
+            $this->getDom()
+                ->loadXML($soapData);
+            ErrorHandler::stop(true);
+        } catch (\Exception $e) {
+            throw new Exception\LoadSoapDataException($e->getMessage());
+        }
     }
 
 
@@ -69,6 +76,24 @@ class Message
     }
 
 
+    /**
+     * Sets the DOM representation of the SOAP message.
+     * 
+     * @param \DomDocument $dom
+     */
+    public function setDom (\DomDocument $dom)
+    {
+        $this->_dom = $dom;
+    }
+
+
+    /**
+     * Returns all the XML namespaces used in the current SOAP message.
+     * 
+     * The keys are the prefixes, the values are the URIs of the namespaces.
+     * 
+     * @return array
+     */
     public function getNamespaces ()
     {
         return Namespaces::getAll();
@@ -101,6 +126,11 @@ class Message
     }
 
 
+    /**
+     * Returns properly configured DomXpath object.
+     * 
+     * @return \DOMXPath
+     */
     public function getXpath ()
     {
         return $this->getXpathManager()
@@ -146,10 +176,16 @@ class Message
     public function addBodyElement (\DomElement $element)
     {
         $dom = $this->getDom();
-        $node = $dom->importNode($element, true);
+        
+        try {
+            $node = $dom->importNode($element, true);
+        } catch (\Exception $e) {
+            throw new Exception\ImportNodeException(sprintf("Error importing node: [%s] %s", get_class($e), $e->getMessage()));
+        }
         
         $body = $this->getBody();
-        $body->appendChild($node);
+        
+        $this->appendChildToElement($body, $node);
     }
 
 
@@ -164,6 +200,23 @@ class Message
         
         foreach ($bodyElements as $element) {
             $this->addBodyElement($element);
+        }
+    }
+
+
+    /**
+     * Appends an element as a child to another element.
+     * 
+     * @param \DomElement $element
+     * @param \DomElement $child
+     * @throws Exception\AppendChildException
+     */
+    public function appendChildToElement (\DomElement $element, \DomElement $child)
+    {
+        try {
+            return $element->appendChild($child);
+        } catch (\Exception $e) {
+            throw new Exception\AppendChildException(sprintf("Error appending element: [%s] %s", get_class($e), $e->getMessage()));
         }
     }
 
@@ -208,12 +261,12 @@ class Message
     /**
      * Initializes SOAP envelope with empty header and body.
      */
-    protected function _initDom ()
+    protected function _initDom ($soapPrefix = 'S')
     {
         $dom = $this->getDom(true);
-        $envelope = $dom->appendChild($this->_createElement('S', 'Envelope'));
-        $envelope->appendChild($this->_createElement('S', 'Header'));
-        $envelope->appendChild($this->_createElement('S', 'Body'));
+        $envelope = $dom->appendChild($this->_createElement($soapPrefix, 'Envelope'));
+        $envelope->appendChild($this->_createElement($soapPrefix, 'Header'));
+        $envelope->appendChild($this->_createElement($soapPrefix, 'Body'));
     }
 
 
