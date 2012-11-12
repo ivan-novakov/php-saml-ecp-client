@@ -6,8 +6,8 @@ use Saml\Ecp\Response\IdpAuthnResponse;
 use Saml\Ecp\Soap\Message;
 use Saml\Ecp\Response\Response;
 use Saml\Ecp\Response\ResponseInterface;
-use Saml\Ecp\Response\InitialSpResponse;
-use Saml\Ecp\Request\InitialSpRequest;
+use Saml\Ecp\Response\SpInitialResponse;
+use Saml\Ecp\Request\SpInitialRequest;
 use Saml\Ecp\Request\RequestInterface;
 use Saml\Ecp\Request\IdpAuthnRequest;
 use Saml\Ecp\Request\Request;
@@ -125,7 +125,7 @@ class Client
     public function authenticate (Authentication\Method\MethodInterface $authenticationMethod)
     {
         // send PAOS request to SP
-        $initialSpRequest = new InitialSpRequest();
+        $initialSpRequest = new SpInitialRequest();
         $initialSpResponse = $this->sendInitialRequestToSp($initialSpRequest);
         
         try {
@@ -180,7 +180,7 @@ class Client
         $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new InitialSpResponse($httpResponse);
+        return new SpInitialResponse($httpResponse);
     }
 
 
@@ -230,7 +230,7 @@ class Client
      */
     public function constructIdpAuthnRequestFromSpResponse (ResponseInterface $response)
     {
-        /* @var $response InitialSpResponse */
+        /* @var $response SpInitialResponse */
         $soapResponse = $response->getSoapMessage();
         
         $soapRequest = new Message();

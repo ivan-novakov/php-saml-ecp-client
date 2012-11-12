@@ -5,7 +5,7 @@ namespace Saml\Ecp\Response;
 use Saml\Ecp\Client\MimeType;
 
 
-class InitialSpResponse extends Response
+class SpInitialResponse extends Response
 {
 
 
