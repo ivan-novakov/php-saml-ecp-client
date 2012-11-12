@@ -1,0 +1,60 @@
+<?php
+use Zend\Http\Client;
+
+$globalConfig = new \Zend\Config\Config(array(
+    'credentials' => array(
+        'username' => 'testuser', 
+        'password' => 'testpasswd'
+    ), 
+    
+    'discovery' => array(
+        'options' => array(
+            'idp_ecp_endpoint' => 'https://idp.example.org/idp/profile/SAML2/SOAP/ECP'
+        )
+    ), 
+    
+    'client' => array(
+        'protected_content_uri' => 'https://sp.example.org/devel/secure/', 
+        
+        'http_client' => array(
+            'options' => array(
+                'maxredirects' => 0, 
+                'strictredirects' => true, 
+                'useragent' => 'PHP SAML ECP Client'
+            ), 
+            'context' => array(
+                'ssl' => array(
+                    'cafile' => '/etc/ssl/certs/ca-bundle.pem'
+                )
+            )
+        )
+    )
+));
+
+//-----------------------
+function _tidyXml ($xml)
+{
+    $tidy = new \tidy();
+    $xml = $tidy->repairString($xml, array(
+        'output-xml' => true, 
+        'input-xml' => true, 
+        'indent' => true, 
+        'indent-spaces' => 4, 
+        'indent-attributes' => true, 
+        'wrap' => 100
+    ));
+    
+    return $xml;
+}
+
+
+function _dump ($value)
+{
+    error_log(print_r($value, true));
+}
+
+
+function _dumpx ($value)
+{
+    _dump(_tidyXml($value));
+}
