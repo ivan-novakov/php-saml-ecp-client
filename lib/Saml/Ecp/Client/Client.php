@@ -2,6 +2,7 @@
 
 namespace Saml\Ecp\Client;
 
+use Saml\Ecp\Request\RequestFactory;
 use Saml\Ecp\Response\IdpAuthnResponse;
 use Saml\Ecp\Response\Response;
 use Saml\Ecp\Response\ResponseInterface;
@@ -30,6 +31,13 @@ class Client
      * @var Http\Client
      */
     protected $_httpClient = null;
+
+    /**
+     * The request factory object.
+     * 
+     * @var RequestFactoryInterface
+     */
+    protected $_requestFactory = null;
 
     /**
      * Options.
@@ -117,14 +125,42 @@ class Client
 
 
     /**
+     * Returns the request factory object.
+     * 
+     * @return RequestFactoryInterface
+     */
+    public function getRequestFactory ()
+    {
+        if (! ($this->_requestFactory instanceof RequestFactoryInterface)) {
+            $this->_requestFactory = new RequestFactory();
+        }
+        
+        return $this->_requestFactory;
+    }
+
+
+    /**
+     * Sets the request factory object.
+     * 
+     * @param RequestFactoryInterface $requestFactory
+     */
+    public function setRequestFactory (RequestFactoryInterface $requestFactory)
+    {
+        $this->_requestFactory = $requestFactory;
+    }
+
+
+    /**
      * Performs the whole authentication flow. 
      * 
      * @param Authentication\Method\MethodInterface $authenticationMethod
      */
     public function authenticate (Authentication\Method\MethodInterface $authenticationMethod)
     {
+        $requestFactory = $this->getRequestFactory();
+        
         // send PAOS request to SP
-        $initialSpRequest = new SpInitialRequest();
+        $initialSpRequest = $requestFactory->createSpInitialRequest();
         $initialSpResponse = $this->sendInitialRequestToSp($initialSpRequest);
         
         try {
@@ -133,9 +169,9 @@ class Client
             _dump("$e");
             return;
         }
-        //_dump((string) $initialSpResponse->getHttpResponse());
+        
         // process response from SP
-        $idpAuthnRequest = $this->constructIdpAuthnRequestFromSpResponse($initialSpResponse);
+        $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($initialSpResponse, $this->_discoverIdpEcpEndpoint());
         
         // send authn request to IdP
         $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
@@ -148,12 +184,10 @@ class Client
         }
         
         // process response from IdP - validate (!)
-        $spConveyRequest = $this->constructSpAuthnConveyRequestFromIdpAuthnResponse($idpAuthnResponse);
+        $spConveyRequest = $requestFactory->createSpAuthnConveyRequest($idpAuthnResponse, $idpAuthnResponse->getConsumerEndpointUrl());
         
         $response = $this->sendAuthnResponseToSp($spConveyRequest);
-        //_dump((string) $response->getHttpResponse());
         
-
         $uri = $this->getProtectedContentUri();
         //_dump($uri);
         $hr = new \Zend\Http\Request();
@@ -217,41 +251,6 @@ class Client
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         return new Response($httpResponse);
-    }
-
-
-    /**
-     * Creates and AuthnRequest SOAP message to be sent to the IdP based on the AuthnRequest message
-     * received from the SP.
-     * 
-     * @param ResponseInterface $response
-     * @return RequestInterface
-     */
-    public function constructIdpAuthnRequestFromSpResponse (ResponseInterface $response)
-    {
-        /* @var $response SpInitialResponse */
-        $request = new IdpAuthnRequest();
-        $request->copyDataFromResponse($response);
-        $request->setUri($this->_discoverIdpEcpEndpoint());
-        
-        return $request;
-    }
-
-
-    /**
-     * Creates an AuthnResponse SOAP message based on the one issued by the IdP to be relayed to the SP.
-     * 
-     * @param ResponseInterface $response
-     * @return RequestInterface
-     */
-    public function constructSpAuthnConveyRequestFromIdpAuthnResponse (ResponseInterface $response)
-    {
-        /* @var $response IdpAuthnResponse */
-        $request = new SpConveyAuthnRequest();
-        $request->copyDataFromResponse($response);
-        $request->setUri($response->getConsumerEndpointUrl());
-        
-        return $request;
     }
     
     /*

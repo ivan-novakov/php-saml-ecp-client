@@ -149,7 +149,7 @@ class Request implements RequestInterface, ContainerInterface
      * 
      * @param ContainerInterface $response
      */
-    public function copyDataFromResponse (ContainerInterface $response)
+    public function copyDataFromSoap (ContainerInterface $response)
     {
         $soapResponse = $response->getSoapMessage();
         
