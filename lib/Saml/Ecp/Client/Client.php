@@ -3,14 +3,13 @@
 namespace Saml\Ecp\Client;
 
 use Saml\Ecp\Response\IdpAuthnResponse;
-use Saml\Ecp\Soap\Message;
 use Saml\Ecp\Response\Response;
 use Saml\Ecp\Response\ResponseInterface;
 use Saml\Ecp\Response\SpInitialResponse;
 use Saml\Ecp\Request\SpInitialRequest;
 use Saml\Ecp\Request\RequestInterface;
 use Saml\Ecp\Request\IdpAuthnRequest;
-use Saml\Ecp\Request\Request;
+//use Saml\Ecp\Request\Request;
 use Saml\Ecp\Request\SpConveyAuthnRequest;
 use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Util\Options;
@@ -231,13 +230,8 @@ class Client
     public function constructIdpAuthnRequestFromSpResponse (ResponseInterface $response)
     {
         /* @var $response SpInitialResponse */
-        $soapResponse = $response->getSoapMessage();
-        
-        $soapRequest = new Message();
-        $soapRequest->copyBodyFromMessage($soapResponse);
-        
         $request = new IdpAuthnRequest();
-        $request->setSoapMessage($soapRequest);
+        $request->copyDataFromResponse($response);
         $request->setUri($this->_discoverIdpEcpEndpoint());
         
         return $request;
@@ -253,14 +247,8 @@ class Client
     public function constructSpAuthnConveyRequestFromIdpAuthnResponse (ResponseInterface $response)
     {
         /* @var $response IdpAuthnResponse */
-        $soapResponse = $response->getSoapMessage();
-        
-        $soapRequest = new Message();
-        $soapRequest->copyBodyFromMessage($soapResponse);
-        
         $request = new SpConveyAuthnRequest();
-        $request->setSoapMessage($soapRequest);
-        
+        $request->copyDataFromResponse($response);
         $request->setUri($response->getConsumerEndpointUrl());
         
         return $request;

@@ -45,6 +45,11 @@ class Request implements RequestInterface, ContainerInterface
     }
 
 
+    /**
+     * Sets the options.
+     * 
+     * @param array|\Traversable $options
+     */
     public function setOptions ($options)
     {
         $this->_options = new Options($options);
@@ -62,6 +67,11 @@ class Request implements RequestInterface, ContainerInterface
     }
 
 
+    /**
+     * Sets the HTTP request.
+     * 
+     * @param Http\Request $request
+     */
     public function setHttpRequest (Http\Request $request)
     {
         $this->_httpRequest = $request;
@@ -127,7 +137,26 @@ class Request implements RequestInterface, ContainerInterface
      */
     public function getSoapMessage ()
     {
+        if (! ($this->_soapMessage instanceof Message)) {
+            $this->_soapMessage = new Message();
+        }
         return $this->_soapMessage;
+    }
+
+
+    /**
+     * Copies relevant data from the provided object.
+     * 
+     * @param ContainerInterface $response
+     */
+    public function copyDataFromResponse (ContainerInterface $response)
+    {
+        $soapResponse = $response->getSoapMessage();
+        
+        $soapRequest = $this->getSoapMessage();
+        $soapRequest->copyBodyFromMessage($soapResponse);
+        
+        $this->setSoapMessage($soapRequest);
     }
 
 
