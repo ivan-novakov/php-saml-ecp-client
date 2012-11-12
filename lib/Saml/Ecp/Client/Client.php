@@ -2,19 +2,16 @@
 
 namespace Saml\Ecp\Client;
 
-use Saml\Ecp\Request\RequestFactory;
-use Saml\Ecp\Response\IdpAuthnResponse;
 use Saml\Ecp\Response\Response;
+use Saml\Ecp\Response\IdpAuthnResponse;
 use Saml\Ecp\Response\ResponseInterface;
 use Saml\Ecp\Response\SpInitialResponse;
-use Saml\Ecp\Request\SpInitialRequest;
 use Saml\Ecp\Request\RequestInterface;
-use Saml\Ecp\Request\IdpAuthnRequest;
-//use Saml\Ecp\Request\Request;
-use Saml\Ecp\Request\SpConveyAuthnRequest;
+use Saml\Ecp\Request\RequestFactory;
 use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Util\Options;
 use Saml\Ecp\Authentication;
+use Saml\Ecp\Discovery;
 use Zend\Http;
 
 
@@ -155,7 +152,8 @@ class Client
      * 
      * @param Authentication\Method\MethodInterface $authenticationMethod
      */
-    public function authenticate (Authentication\Method\MethodInterface $authenticationMethod)
+    public function authenticate (Authentication\Method\MethodInterface $authenticationMethod, 
+        Discovery\Method\MethodInterface $discoveryMethod)
     {
         $requestFactory = $this->getRequestFactory();
         
@@ -171,7 +169,7 @@ class Client
         }
         
         // process response from SP
-        $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($initialSpResponse, $this->_discoverIdpEcpEndpoint());
+        $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($initialSpResponse, $discoveryMethod->getIdpEcpEndpoint());
         
         // send authn request to IdP
         $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
@@ -210,6 +208,7 @@ class Client
      */
     public function sendInitialRequestToSp (RequestInterface $request)
     {
+        /* @var $request \Saml\Ecp\Request\SpInitialRequest */
         $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
@@ -229,7 +228,7 @@ class Client
     public function sendAuthnRequestToIdp (RequestInterface $request, 
         Authentication\Method\MethodInterface $authenticationMethod)
     {
-        /* @var $request IdpAuthnRequest */
+        /* @var $request \Saml\Ecp\Request\IdpAuthnRequest */
         $client = $this->getHttpClient();
         $authenticationMethod->configureHttpClient($client);
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
@@ -247,7 +246,7 @@ class Client
      */
     public function sendAuthnResponseToSp (RequestInterface $request)
     {
-        /* @var $request SpConveyAuthnResponse */
+        /* @var $request \Saml\Ecp\Request\SpConveyAuthnRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         return new Response($httpResponse);
@@ -296,11 +295,5 @@ class Client
         }
         
         return $httpResponse;
-    }
-
-
-    protected function _discoverIdpEcpEndpoint ()
-    {
-        return 'https://login.fel.cvut.cz/idp/profile/SAML2/SOAP/ECP';
     }
 }
