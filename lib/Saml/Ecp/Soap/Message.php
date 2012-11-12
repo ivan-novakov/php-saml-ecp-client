@@ -22,6 +22,20 @@ class Message
      */
     protected $_xpathManager = null;
 
+    /**
+     * The SOAP elements prefix to be used.
+     * 
+     * @var string
+     */
+    protected $_soapNsPrefix = 'S';
+
+    /**
+     * A list of registered XML namespaces.
+     * 
+     * @var array
+     */
+    protected $_namespaces = array();
+
 
     /**
      * Constructor.
@@ -31,6 +45,9 @@ class Message
      */
     public function __construct ($soapData = null, XpathManager $xpathManager = null)
     {
+        // FIXME - get rid of the static call
+        $this->_namespaces = Namespaces::getAll();
+        
         if (null !== $soapData) {
             $this->fromString($soapData);
         } else {
@@ -50,13 +67,19 @@ class Message
      */
     public function fromString ($soapData)
     {
+        $dom = $this->getDom();
+        
         try {
             ErrorHandler::start();
-            $this->getDom()
-                ->loadXML($soapData);
+            $dom->loadXML($soapData);
             ErrorHandler::stop(true);
         } catch (\Exception $e) {
             throw new Exception\LoadSoapDataException($e->getMessage());
+        }
+        
+        $rootElement = $dom->documentElement;
+        if ('envelope' != strtolower($rootElement->localName)) {
+            throw new Exception\LoadSoapDataException(sprintf("Invalid root element '%s'", $rootElement->localName));
         }
     }
 
@@ -94,9 +117,9 @@ class Message
      * 
      * @return array
      */
-    public function getNamespaces ()
+    public function getRegisteredNamespaces ()
     {
-        return Namespaces::getAll();
+        return $this->_namespaces;
     }
 
 
@@ -119,7 +142,7 @@ class Message
     public function getXpathManager ()
     {
         if (! ($this->_xpathManager instanceof XpathManager)) {
-            $this->_xpathManager = new XpathManager($this->getNamespaces());
+            $this->_xpathManager = new XpathManager($this->getRegisteredNamespaces());
         }
         
         return $this->_xpathManager;
@@ -145,7 +168,7 @@ class Message
      */
     public function getBody ()
     {
-        $elements = $this->_getElementsByTagName('S', 'Body');
+        $elements = $this->_getElementsByTagName($this->_soapNsPrefix, 'Body');
         if ($elements->length) {
             return $elements->item(0);
         }
@@ -162,7 +185,7 @@ class Message
     public function getBodyElements ()
     {
         $xpath = $this->getXpath();
-        $elements = $xpath->query('/S:Envelope/S:Body/*');
+        $elements = $xpath->query(sprintf("/%s:Envelope/%s:Body/*", $this->_soapNsPrefix, $this->_soapNsPrefix));
         
         return $elements;
     }
@@ -261,8 +284,12 @@ class Message
     /**
      * Initializes SOAP envelope with empty header and body.
      */
-    protected function _initDom ($soapPrefix = 'S')
+    protected function _initDom ($soapPrefix = null)
     {
+        if (null === $soapPrefix) {
+            $soapPrefix = $this->_soapNsPrefix;
+        }
+        
         $dom = $this->getDom(true);
         $envelope = $dom->appendChild($this->_createElement($soapPrefix, 'Envelope'));
         $envelope->appendChild($this->_createElement($soapPrefix, 'Header'));
@@ -312,7 +339,7 @@ class Message
      */
     protected function _getNamespaceUri ($prefix)
     {
-        $namespaces = $this->getNamespaces();
+        $namespaces = $this->getRegisteredNamespaces();
         if (! isset($namespaces[$prefix])) {
             throw new Exception\InvalidNamespaceException($prefix);
         }

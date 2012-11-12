@@ -46,6 +46,11 @@ class Response implements ResponseInterface
     }
 
 
+    /**
+     * Sets the options.
+     * 
+     * @param array|\Traversable $options
+     */
     public function setOptions ($options)
     {
         $this->_options = new Options($options);
@@ -95,6 +100,7 @@ class Response implements ResponseInterface
     /**
      * (non-PHPdoc)
      * @see \Saml\Ecp\Response\ResponseInterface::getSoapMessage()
+     * @return Message
      */
     public function getSoapMessage ()
     {

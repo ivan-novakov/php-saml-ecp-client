@@ -173,7 +173,7 @@ class Client
      * location at the SP and expects a session initiation start.
      * 
      * @param RequestInterface $request
-     * @return InitialSpResponse
+     * @return ResponseInterface
      */
     public function sendInitialRequestToSp (RequestInterface $request)
     {
@@ -196,6 +196,7 @@ class Client
     public function sendAuthnRequestToIdp (RequestInterface $request, 
         Authentication\Method\MethodInterface $authenticationMethod)
     {
+        /* @var $request IdpAuthnRequest */
         $client = $this->getHttpClient();
         $authenticationMethod->configureHttpClient($client);
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
@@ -213,9 +214,7 @@ class Client
      */
     public function sendAuthnResponseToSp (RequestInterface $request)
     {
-        // FIXME
-        $request->setUri('https://hroch.cesnet.cz/Shibboleth.sso/SAML2/ECP');
-        
+        /* @var $request SpConveyAuthnResponse */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         return new Response($httpResponse);
@@ -231,6 +230,7 @@ class Client
      */
     public function constructIdpAuthnRequestFromSpResponse (ResponseInterface $response)
     {
+        /* @var $response InitialSpResponse */
         $soapResponse = $response->getSoapMessage();
         
         $soapRequest = new Message();
@@ -252,6 +252,7 @@ class Client
      */
     public function constructSpAuthnConveyRequestFromIdpAuthnResponse (ResponseInterface $response)
     {
+        /* @var $response IdpAuthnResponse */
         $soapResponse = $response->getSoapMessage();
         
         $soapRequest = new Message();
@@ -259,6 +260,8 @@ class Client
         
         $request = new SpConveyAuthnRequest();
         $request->setSoapMessage($soapRequest);
+        
+        $request->setUri($response->getConsumerEndpointUrl());
         
         return $request;
     }
