@@ -23,12 +23,4 @@ interface RequestInterface
      * @return \Zend\Http\Request
      */
     public function getHttpRequest ();
-
-
-    /**
-     * Sets the SOAP message to be sent.
-     * 
-     * @param Message $message
-     */
-    public function setSoapMessage (Message $message);
 }

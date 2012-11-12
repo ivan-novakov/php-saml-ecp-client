@@ -2,12 +2,13 @@
 
 namespace Saml\Ecp\Request;
 
+use Saml\Ecp\Soap\ContainerInterface;
 use Saml\Ecp\Soap\Message;
 use Saml\Ecp\Util\Options;
 use Zend\Http;
 
 
-class Request implements RequestInterface
+class Request implements RequestInterface, ContainerInterface
 {
 
     /**
@@ -83,6 +84,7 @@ class Request implements RequestInterface
 
     /**
      * Sets a HTTP request header.
+     * 
      * @param string $name
      * @param string $value
      */
@@ -110,15 +112,19 @@ class Request implements RequestInterface
 
     /**
      * (non-PHPdoc)
-     * @see \Saml\Ecp\Request\RequestInterface::setSoapMessage()
+     * @see \Saml\Ecp\Soap\ContainerInterface::setSoapMessage()
      */
-    public function setSoapMessage (Message $message)
+    public function setSoapMessage (Message $soapMessage)
     {
-        $this->_soapMessage = $message;
+        $this->_soapMessage = $soapMessage;
         $this->setContent($this->_soapMessage->toString());
     }
 
 
+    /**
+     * (non-PHPdoc)
+     * @see \Saml\Ecp\Soap\ContainerInterface::getSoapMessage()
+     */
     public function getSoapMessage ()
     {
         return $this->_soapMessage;

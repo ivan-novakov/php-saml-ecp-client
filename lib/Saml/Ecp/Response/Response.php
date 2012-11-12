@@ -2,6 +2,7 @@
 
 namespace Saml\Ecp\Response;
 
+use Saml\Ecp\Soap\ContainerInterface;
 use Saml\Ecp\Soap\Message;
 use Saml\Ecp\Soap\Namespaces;
 use Saml\Ecp\Soap\XpathManager;
@@ -9,7 +10,7 @@ use Zend\Http;
 use Saml\Ecp\Util\Options;
 
 
-class Response implements ResponseInterface
+class Response implements ResponseInterface, ContainerInterface
 {
 
     /**
@@ -99,7 +100,7 @@ class Response implements ResponseInterface
 
     /**
      * (non-PHPdoc)
-     * @see \Saml\Ecp\Response\ResponseInterface::getSoapMessage()
+     * @see \Saml\Ecp\Soap\ContainerInterface::getSoapMessage()
      * @return Message
      */
     public function getSoapMessage ()
@@ -109,6 +110,16 @@ class Response implements ResponseInterface
         }
         
         return $this->_soapMessage;
+    }
+
+
+    /**
+     * \(non-PHPdoc)
+     * @see \Saml\Ecp\Soap\ContainerInterface::setSoapMessage()
+     */
+    public function setSoapMessage (Message $soapMessage)
+    {
+        $this->_soapMessage = $soapMessage;
     }
 
 

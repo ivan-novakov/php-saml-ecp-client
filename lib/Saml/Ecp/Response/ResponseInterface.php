@@ -31,12 +31,4 @@ interface ResponseInterface
      * @throws Exception\InvalidResponseException
      */
     public function validate ();
-
-
-    /**
-     * Returns the SOAP message object, containing SOAP data.
-     * 
-     * @return Message
-     */
-    public function getSoapMessage ();
 }
