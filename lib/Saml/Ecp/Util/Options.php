@@ -55,4 +55,15 @@ class Options extends \ArrayObject
     {
         $this->offsetSet($key, $value);
     }
+
+
+    /**
+     * Returns the object as an array.
+     * 
+     * @return array
+     */
+    public function toArray ()
+    {
+        return (array) $this;
+    }
 }

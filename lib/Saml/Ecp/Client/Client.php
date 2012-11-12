@@ -14,6 +14,7 @@ use Saml\Ecp\Request\Request;
 use Saml\Ecp\Request\SpConveyAuthnRequest;
 use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Util\Options;
+use Saml\Ecp\Authentication;
 use Zend\Http;
 
 
@@ -116,23 +117,29 @@ class Client
     }
 
 
-    public function authenticate (array $credentials)
+    /**
+     * Performs the whole authentication flow. 
+     * 
+     * @param Authentication\Method\MethodInterface $authenticationMethod
+     */
+    public function authenticate (Authentication\Method\MethodInterface $authenticationMethod)
     {
         // send PAOS request to SP
-        $response = $this->sendInitialRequestToSp();
+        $initialSpRequest = new InitialSpRequest();
+        $initialSpResponse = $this->sendInitialRequestToSp($initialSpRequest);
         
         try {
-            $response->validate();
+            $initialSpResponse->validate();
         } catch (\Exception $e) {
             _dump("$e");
             return;
         }
-        
+        //_dump((string) $initialSpResponse->getHttpResponse());
         // process response from SP
-        $idpAuthnRequest = $this->constructIdpAuthnRequestFromSpResponse($response);
+        $idpAuthnRequest = $this->constructIdpAuthnRequestFromSpResponse($initialSpResponse);
         
         // send authn request to IdP
-        $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $credentials);
+        $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
         
         try {
             $idpAuthnResponse->validate();
@@ -145,6 +152,17 @@ class Client
         $spConveyRequest = $this->constructSpAuthnConveyRequestFromIdpAuthnResponse($idpAuthnResponse);
         
         $response = $this->sendAuthnResponseToSp($spConveyRequest);
+        //_dump((string) $response->getHttpResponse());
+        
+
+        $uri = $this->getProtectedContentUri();
+        //_dump($uri);
+        $hr = new \Zend\Http\Request();
+        $hr->setUri($uri);
+        $hresp = $this->getHttpClient()
+            ->send($hr);
+        
+        _dump((string) $hresp);
     }
 
 
@@ -157,12 +175,8 @@ class Client
      * @param RequestInterface $request
      * @return InitialSpResponse
      */
-    public function sendInitialRequestToSp (RequestInterface $request = null)
+    public function sendInitialRequestToSp (RequestInterface $request)
     {
-        if (! $request) {
-            $request = new InitialSpRequest();
-        }
-        
         $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
@@ -176,12 +190,16 @@ class Client
      * The IdP should authenticate the user automatically and it should return an authn response.
      * 
      * @param RequestInterface $request
-     * @param array $credentials
+     * @param Authentication\Method\MethodInterface $authenticationMethod
      * @return ResponseInterface
      */
-    public function sendAuthnRequestToIdp (RequestInterface $request, array $credentials)
+    public function sendAuthnRequestToIdp (RequestInterface $request, 
+        Authentication\Method\MethodInterface $authenticationMethod)
     {
-        $httpResponse = $this->_sendHttpAuthRequest($request->getHttpRequest(), $credentials);
+        $client = $this->getHttpClient();
+        $authenticationMethod->configureHttpClient($client);
+        $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
+        $client->resetParameters();
         
         return new IdpAuthnResponse($httpResponse);
     }
@@ -286,21 +304,6 @@ class Client
         } catch (\Exception $e) {
             throw new Exception\HttpRequestException(sprintf("HTTP request exception: [%s] %s", get_class($e), $e->getMessage()));
         }
-        
-        return $httpResponse;
-    }
-
-
-    protected function _sendHttpAuthRequest (Http\Request $httpRequest, array $credentials)
-    {
-        $client = $this->getHttpClient();
-        
-        if (! isset($credentials['username']) || ! isset($credentials['password'])) {
-            throw new Exception\InvalidCredentialsException(sprintf("Invalid credentials: username or password not set"));
-        }
-        $client->setAuth($credentials['username'], $credentials['password']);
-        $httpResponse = $this->_sendHttpRequest($httpRequest);
-        $client->resetParameters();
         
         return $httpResponse;
     }

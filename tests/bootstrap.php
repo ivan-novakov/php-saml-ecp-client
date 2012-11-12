@@ -2,6 +2,8 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+define('TESTS_FILES_DIR', __DIR__ . '/files/');
+
 //--
 function _dump ($value)
 {
