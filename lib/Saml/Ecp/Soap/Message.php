@@ -74,6 +74,9 @@ class Message
             $dom->loadXML($soapData);
             ErrorHandler::stop(true);
         } catch (\Exception $e) {
+            if (ErrorHandler::started()) {
+                ErrorHandler::stop();
+            }
             throw new Exception\LoadSoapDataException($e->getMessage());
         }
         
@@ -234,7 +237,7 @@ class Message
      * @param \DomElement $child
      * @throws Exception\AppendChildException
      */
-    public function appendChildToElement (\DomElement $element, \DomElement $child)
+    public function appendChildToElement (\DomElement $element,\DomElement $child)
     {
         try {
             return $element->appendChild($child);
