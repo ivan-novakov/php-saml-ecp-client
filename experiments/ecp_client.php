@@ -4,7 +4,6 @@ use Saml\Ecp\Client\Client;
 use Saml\Ecp\Discovery\Method\StaticIdp;
 use Saml\Ecp\Authentication\Method\BasicAuth;
 
-require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/_common.php';
 
 $credentials = $globalConfig->get('credentials');
