@@ -8,7 +8,7 @@ use Saml\Ecp\Util\Options;
 use Zend\Http;
 
 
-class Request implements RequestInterface, ContainerInterface
+abstract class AbstractRequest implements RequestInterface
 {
 
     /**
@@ -109,9 +109,8 @@ class Request implements RequestInterface, ContainerInterface
 
 
     /**
-     * Sets the content of the request body.
-     * 
-     * @param string $content
+     * (non-PHPdoc)
+     * @see \Saml\Ecp\Request\RequestInterface::setContent()
      */
     public function setContent ($content)
     {

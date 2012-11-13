@@ -2,8 +2,11 @@
 
 namespace Saml\Ecp\Response;
 
-
-class IdpAuthnResponse extends Response
+/**
+ * The response sent by the IdP after sending the authn request.
+ *
+ */
+class IdpAuthnResponse extends AbstractResponse
 {
 
 

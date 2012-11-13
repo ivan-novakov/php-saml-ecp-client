@@ -2,10 +2,11 @@
 
 namespace Saml\Ecp\Response;
 
+use Saml\Ecp\Soap\ContainerInterface;
 use Saml\Ecp\Soap\Message;
 
 
-interface ResponseInterface
+interface ResponseInterface extends ContainerInterface
 {
 
 
@@ -18,17 +19,17 @@ interface ResponseInterface
 
 
     /**
+     * Returns the HTTP response.
+     * 
+     * @return \Zend\Http\Response
+     */
+    public function getHttpResponse ();
+
+
+    /**
      * Returns the content of the response.
      *
      * @return string
      */
     public function getContent ();
-
-
-    /**
-     * Performs validation of the response data.
-     * 
-     * @throws Exception\InvalidResponseException
-     */
-    public function validate ();
 }

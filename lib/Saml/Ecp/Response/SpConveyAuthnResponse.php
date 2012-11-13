@@ -3,6 +3,6 @@
 namespace Saml\Ecp\Response;
 
 
-class SpConveyAuthnResponse extends Response
+class SpConveyAuthnResponse extends AbstractResponse
 {
 }

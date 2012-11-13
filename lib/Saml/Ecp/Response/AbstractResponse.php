@@ -2,15 +2,12 @@
 
 namespace Saml\Ecp\Response;
 
-use Saml\Ecp\Soap\ContainerInterface;
 use Saml\Ecp\Soap\Message;
-use Saml\Ecp\Soap\Namespaces;
-use Saml\Ecp\Soap\XpathManager;
-use Zend\Http;
 use Saml\Ecp\Util\Options;
+use Zend\Http;
 
 
-class Response implements ResponseInterface, ContainerInterface
+abstract class AbstractResponse implements ResponseInterface
 {
 
     /**
