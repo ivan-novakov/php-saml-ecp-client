@@ -3,6 +3,6 @@
 namespace Saml\Ecp\Request;
 
 
-class SpResourceRequest extends Request
+class SpResourceRequest extends AbstractRequest
 {
 }

@@ -6,7 +6,7 @@ use Saml\Ecp\Soap\Message;
 use Saml\Ecp\Client\MimeType;
 
 
-class SpConveyAuthnRequest extends Request
+class SpConveyAuthnRequest extends AbstractRequest
 {
 
 

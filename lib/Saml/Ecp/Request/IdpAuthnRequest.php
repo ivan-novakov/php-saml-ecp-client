@@ -3,7 +3,7 @@
 namespace Saml\Ecp\Request;
 
 
-class IdpAuthnRequest extends Request
+class IdpAuthnRequest extends AbstractRequest
 {
 
 

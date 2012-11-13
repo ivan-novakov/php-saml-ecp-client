@@ -2,10 +2,10 @@
 
 namespace Saml\Ecp\Request;
 
-use Saml\Ecp\Soap\Message;
+use Saml\Ecp\Soap\ContainerInterface;
 
 
-interface RequestInterface
+interface RequestInterface extends ContainerInterface
 {
 
 
@@ -15,6 +15,14 @@ interface RequestInterface
      * @param string $uri
      */
     public function setUri ($uri);
+
+
+    /**
+     * Sets the content of the request.
+     * 
+     * @param string $content
+     */
+    public function setContent ($content);
 
 
     /**

@@ -5,7 +5,7 @@ namespace Saml\Ecp\Request;
 use Saml\Ecp\Client\MimeType;
 
 
-class SpInitialRequest extends Request
+class SpInitialRequest extends AbstractRequest
 {
 
     const URN_ECP = 'urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp';
