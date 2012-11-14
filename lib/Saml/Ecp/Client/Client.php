@@ -35,6 +35,13 @@ class Client
     protected $_requestFactory = null;
 
     /**
+     * The response validator factory.
+     * 
+     * @var Response\Validator\ValidatorFactoryInterface
+     */
+    protected $_responseValidatorFactory = null;
+
+    /**
      * Options.
      * 
      * @var Options
@@ -61,6 +68,30 @@ class Client
     public function setOptions ($options)
     {
         $this->_options = new Options($options);
+    }
+
+
+    /**
+     * Returns all options.
+     * 
+     * @return Options
+     */
+    public function getOptions ()
+    {
+        return $this->_options;
+    }
+
+
+    /**
+     * Returns the value of the required option.
+     * 
+     * @param string $name
+     * @param mixed $defaultValue
+     * @return mixed
+     */
+    public function getOption ($name, $defaultValue = null)
+    {
+        return $this->_options->get($name, $defaultValue);
     }
 
 
@@ -145,12 +176,32 @@ class Client
     }
 
 
+    /**
+     * Returns the response validator factory.
+     * 
+     * @return \Saml\Ecp\Response\Validator\ValidatorFactoryInterface
+     */
     public function getResponseValidatorFactory ()
-    {}
+    {
+        if (! ($this->_responseValidatorFactory instanceof Response\Validator\ValidatorFactoryInterface)) {
+            $this->_responseValidatorFactory = new Response\Validator\ValidatorFactory(array(
+                Response\Validator\ValidatorFactory::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD)
+            ));
+        }
+        
+        return $this->_responseValidatorFactory;
+    }
 
 
-    public function setResponseValidatorFactory ()
-    {}
+    /**
+     * Sets the response validator factory.
+     * 
+     * @param Response\Validator\ValidatorFactoryInterface $responseValidatorFactory
+     */
+    public function setResponseValidatorFactory (Response\Validator\ValidatorFactoryInterface $responseValidatorFactory)
+    {
+        $this->_responseValidatorFactory = $responseValidatorFactory;
+    }
 
 
     /**
@@ -201,7 +252,14 @@ class Client
         $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new Response\SpInitialResponse($httpResponse);
+        $response = new Response\SpInitialResponse($httpResponse);
+        
+        $validator = $this->getResponseValidatorFactory()
+            ->createSpInitialResponseValidator();
+        
+        $this->_validateResponse($validator, $response, 'initial SP response');
+        
+        return $response;
     }
 
 
@@ -223,7 +281,13 @@ class Client
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         $client->resetParameters();
         
-        return new Response\IdpAuthnResponse($httpResponse);
+        $response = new Response\IdpAuthnResponse($httpResponse);
+        $validator = $this->getResponseValidatorFactory()
+            ->createIdpAuthnResponseValidator();
+        
+        $this->_validateResponse($validator, $response, 'IdP authn response');
+        
+        return $response;
     }
 
 
@@ -299,5 +363,18 @@ class Client
         }
         
         return $httpResponse;
+    }
+
+
+    protected function _validateResponse (Response\Validator\ValidatorInterface $validator, 
+        Response\ResponseInterface $response, $responseLabel = 'response')
+    {
+        try {
+            if (! $validator->isValid($response)) {
+                throw new Exception\InvalidResponseException(sprintf("Invalid %s: %s", $responseLabel, implode(', ', $validator->getMessages())));
+            }
+        } catch (\Exception $e) {
+            throw new Exception\ResponseValidationException(sprintf("Exception during %s validation: [%s] %s", $responseLabel, get_class($e), $e->getMessage()));
+        }
     }
 }
