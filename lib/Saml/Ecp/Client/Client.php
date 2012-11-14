@@ -11,6 +11,10 @@ use Saml\Ecp\Discovery;
 use Zend\Http;
 
 
+/**
+ * Main "bootstrap" class that brings everyhitng in the library together.
+ *
+ */
 class Client
 {
 
@@ -33,6 +37,13 @@ class Client
      * @var Request\RequestFactoryInterface
      */
     protected $_requestFactory = null;
+
+    /**
+     * The response factory object.
+     * 
+     * @var Response\ResponseFactoryInterface
+     */
+    protected $_responseFactory = null;
 
     /**
      * The response validator factory.
@@ -177,9 +188,35 @@ class Client
 
 
     /**
+     * Returns the response factory.
+     * 
+     * @return Response\ResponseFactoryInterface
+     */
+    public function getResponseFactory ()
+    {
+        if (! ($this->_responseFactory instanceof Response\ResponseFactoryInterface)) {
+            $this->_responseFactory = new Response\ResponseFactory();
+        }
+        
+        return $this->_responseFactory;
+    }
+
+
+    /**
+     * Sets the response factory.
+     * 
+     * @param Response\ResponseFactoryInterface $responseFactory
+     */
+    public function setResponseFactory (Response\ResponseFactoryInterface $responseFactory)
+    {
+        $this->_responseFactory = $responseFactory;
+    }
+
+
+    /**
      * Returns the response validator factory.
      * 
-     * @return \Saml\Ecp\Response\Validator\ValidatorFactoryInterface
+     * @return Response\Validator\ValidatorFactoryInterface
      */
     public function getResponseValidatorFactory ()
     {
@@ -217,17 +254,14 @@ class Client
         // send PAOS request to SP
         $spInitialRequest = $requestFactory->createSpInitialRequest();
         $spInitialResponse = $this->sendInitialRequestToSp($spInitialRequest);
-        $spInitialResponse->validate();
         
         // send authn request to IdP
         $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($spInitialResponse, $discoveryMethod->getIdpEcpEndpoint());
         $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
-        $idpAuthnResponse->validate();
         
         // convey the authn response back to the SP
         $spConveyRequest = $requestFactory->createSpAuthnConveyRequest($idpAuthnResponse, $idpAuthnResponse->getConsumerEndpointUrl());
         $spConveyResponse = $this->sendAuthnResponseToSp($spConveyRequest);
-        $spConveyResponse->validate();
         
         // access protected resource
         $spResourceRequest = $requestFactory->createSpResourceRequest($this->getProtectedContentUri());
@@ -252,8 +286,8 @@ class Client
         $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        $response = new Response\SpInitialResponse($httpResponse);
-        
+        $response = $this->getResponseFactory()
+            ->createSpInitialResponse($httpResponse);
         $validator = $this->getResponseValidatorFactory()
             ->createSpInitialResponseValidator();
         
@@ -281,7 +315,8 @@ class Client
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         $client->resetParameters();
         
-        $response = new Response\IdpAuthnResponse($httpResponse);
+        $response = $this->getResponseFactory()
+            ->createIdpAuthnResponse($httpResponse);
         $validator = $this->getResponseValidatorFactory()
             ->createIdpAuthnResponseValidator();
         
@@ -302,7 +337,8 @@ class Client
         /* @var $request \Saml\Ecp\Request\SpConveyAuthnRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new Response\SpConveyAuthnResponse($httpResponse);
+        return $this->getResponseFactory()
+            ->createSpConveryAuthnResponse($httpResponse);
     }
 
 
@@ -317,7 +353,8 @@ class Client
         /* @var $request \Saml\Ecp\Request\SpResourceRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new Response\SpResourceResponse($httpResponse);
+        return $this->getResponseFactory()
+            ->createSpResourceResponse($httpResponse);
     }
     
     /*
@@ -366,6 +403,15 @@ class Client
     }
 
 
+    /**
+     * Runs a validation with the provided validator on the provided response.
+     * 
+     * @param Response\Validator\ValidatorInterface $validator
+     * @param Response\ResponseInterface $response
+     * @param string $responseLabel
+     * @throws Exception\InvalidResponseException
+     * @throws Exception\ResponseValidationException
+     */
     protected function _validateResponse (Response\Validator\ValidatorInterface $validator, 
         Response\ResponseInterface $response, $responseLabel = 'response')
     {
