@@ -6,6 +6,10 @@ use Saml\Ecp\Util\Options;
 use Saml\Ecp\Client\MimeType;
 
 
+/**
+ * Factory class for creating response validators.
+ *
+ */
 class ValidatorFactory implements ValidatorFactoryInterface
 {
 

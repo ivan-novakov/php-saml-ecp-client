@@ -5,6 +5,10 @@ namespace Saml\Ecp\Response\Validator;
 use Saml\Ecp\Response\ResponseInterface;
 
 
+/**
+ * Validator chain - a composite validator which iterates through a list of validators.
+ *
+ */
 class Chain extends AbstractValidator
 {
 

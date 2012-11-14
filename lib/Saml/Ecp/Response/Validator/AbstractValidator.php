@@ -5,6 +5,10 @@ namespace Saml\Ecp\Response\Validator;
 use Saml\Ecp\Util\Options;
 
 
+/**
+ * Abstract response validator class.
+ *
+ */
 abstract class AbstractValidator implements ValidatorInterface
 {
 
