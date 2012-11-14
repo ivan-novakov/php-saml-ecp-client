@@ -76,7 +76,7 @@ abstract class AbstractValidator implements ValidatorInterface
      */
     public function addMessage ($message)
     {
-        $this->_messages[get_class($this)][] = $message;
+        $this->_messages[] = $message;
     }
 
 

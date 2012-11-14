@@ -62,15 +62,15 @@ class AbstractValidatorTest extends \PHPUnit_Framework_TestCase
     public function testAddMessage ()
     {
         $validator = $this->_getValidatorMock();
-        $validator->addMessage('test message');
+        $validator->addMessage('test message 1');
+        $validator->addMessage('test message 2');
         
         $messages = $validator->getMessages();
-        $this->assertCount(1, $messages);
+        $this->assertCount(2, $messages);
         
         $expected = array(
-            get_class($validator) => array(
-                'test message'
-            )
+            'test message 1', 
+            'test message 2'
         );
         $this->assertSame($expected, $messages);
     }
