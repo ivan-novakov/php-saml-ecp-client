@@ -117,7 +117,7 @@ class Client
     {
         $uri = (string) $this->_options->get(self::OPT_PROTECTED_CONTENT_URI);
         if (! $uri && $throwException) {
-            throw new GeneralException\MissingConfigException(self::OPT_PROTECTED_CONTENT_URI);
+            throw new GeneralException\MissingOptionException(self::OPT_PROTECTED_CONTENT_URI);
         }
         
         return $uri;
@@ -290,7 +290,7 @@ class Client
         $validator = $this->getResponseValidatorFactory()
             ->createSpInitialResponseValidator();
         
-        $this->_validateResponse($validator, $response, 'initial SP response');
+        $this->validateResponse($validator, $response, 'initial SP response');
         
         return $response;
     }
@@ -319,7 +319,7 @@ class Client
         $validator = $this->getResponseValidatorFactory()
             ->createIdpAuthnResponseValidator();
         
-        $this->_validateResponse($validator, $response, 'IdP authn response');
+        $this->validateResponse($validator, $response, 'IdP authn response');
         
         return $response;
     }
@@ -354,6 +354,34 @@ class Client
         
         return $this->getResponseFactory()
             ->createSpResourceResponse($httpResponse);
+    }
+
+
+    /**
+     * Runs a validation with the provided validator on the provided response.
+     *
+     * @param Response\Validator\ValidatorInterface $validator
+     * @param Response\ResponseInterface $response
+     * @param string $responseLabel
+     * @throws Exception\InvalidResponseException
+     * @throws Exception\ResponseValidationException
+     */
+    public function validateResponse (Response\Validator\ValidatorInterface $validator, 
+        Response\ResponseInterface $response, $responseLabel = 'response')
+    {
+        $valid = false;
+        
+        try {
+            $valid = $validator->isValid($response);
+        } catch (\Exception $e) {
+            throw new Exception\ResponseValidationException(sprintf("Exception during %s validation: [%s] %s", $responseLabel, get_class($e), $e->getMessage()));
+        }
+        
+        if (! $valid) {
+            throw new Exception\InvalidResponseException(sprintf("Invalid %s: %s", $responseLabel, implode(', ', $validator->getMessages())));
+        }
+        
+        return $valid;
     }
     
     /*
@@ -399,27 +427,5 @@ class Client
         }
         
         return $httpResponse;
-    }
-
-
-    /**
-     * Runs a validation with the provided validator on the provided response.
-     * 
-     * @param Response\Validator\ValidatorInterface $validator
-     * @param Response\ResponseInterface $response
-     * @param string $responseLabel
-     * @throws Exception\InvalidResponseException
-     * @throws Exception\ResponseValidationException
-     */
-    protected function _validateResponse (Response\Validator\ValidatorInterface $validator, 
-        Response\ResponseInterface $response, $responseLabel = 'response')
-    {
-        try {
-            if (! $validator->isValid($response)) {
-                throw new Exception\InvalidResponseException(sprintf("Invalid %s: %s", $responseLabel, implode(', ', $validator->getMessages())));
-            }
-        } catch (\Exception $e) {
-            throw new Exception\ResponseValidationException(sprintf("Exception during %s validation: [%s] %s", $responseLabel, get_class($e), $e->getMessage()));
-        }
     }
 }
