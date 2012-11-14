@@ -2,14 +2,8 @@
 
 namespace Saml\Ecp\Client;
 
-use Saml\Ecp\Response\SpConveyAuthnResponse;
-use Saml\Ecp\Response\Response;
-use Saml\Ecp\Response\IdpAuthnResponse;
-use Saml\Ecp\Response\ResponseInterface;
-use Saml\Ecp\Response\SpInitialResponse;
-use Saml\Ecp\Response\SpResourceResponse;
-use Saml\Ecp\Request\RequestInterface;
-use Saml\Ecp\Request\RequestFactory;
+use Saml\Ecp\Response;
+use Saml\Ecp\Request;
 use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Util\Options;
 use Saml\Ecp\Authentication;
@@ -24,6 +18,8 @@ class Client
 
     const OPT_HTTP_CLIENT = 'http_client';
 
+    const OPT_SOAP_ENVELOPE_XSD = 'soap_envelope_xsd';
+
     /**
      * The Zend HTTP client.
      * 
@@ -34,7 +30,7 @@ class Client
     /**
      * The request factory object.
      * 
-     * @var RequestFactoryInterface
+     * @var Request\RequestFactoryInterface
      */
     protected $_requestFactory = null;
 
@@ -126,12 +122,12 @@ class Client
     /**
      * Returns the request factory object.
      * 
-     * @return RequestFactoryInterface
+     * @return Request\RequestFactoryInterface
      */
     public function getRequestFactory ()
     {
-        if (! ($this->_requestFactory instanceof RequestFactoryInterface)) {
-            $this->_requestFactory = new RequestFactory();
+        if (! ($this->_requestFactory instanceof Request\RequestFactoryInterface)) {
+            $this->_requestFactory = new Request\RequestFactory();
         }
         
         return $this->_requestFactory;
@@ -141,12 +137,20 @@ class Client
     /**
      * Sets the request factory object.
      * 
-     * @param RequestFactoryInterface $requestFactory
+     * @param Request\RequestFactoryInterface $requestFactory
      */
-    public function setRequestFactory (RequestFactoryInterface $requestFactory)
+    public function setRequestFactory (Request\RequestFactoryInterface $requestFactory)
     {
         $this->_requestFactory = $requestFactory;
     }
+
+
+    public function getResponseValidatorFactory ()
+    {}
+
+
+    public function setResponseValidatorFactory ()
+    {}
 
 
     /**
@@ -189,15 +193,15 @@ class Client
      * location at the SP and expects a session initiation start.
      * 
      * @param RequestInterface $request
-     * @return ResponseInterface
+     * @return Response\ResponseInterface
      */
-    public function sendInitialRequestToSp (RequestInterface $request)
+    public function sendInitialRequestToSp (Request\RequestInterface $request)
     {
         /* @var $request \Saml\Ecp\Request\SpInitialRequest */
         $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new SpInitialResponse($httpResponse);
+        return new Response\SpInitialResponse($httpResponse);
     }
 
 
@@ -206,11 +210,11 @@ class Client
      * 
      * The IdP should authenticate the user automatically and it should return an authn response.
      * 
-     * @param RequestInterface $request
+     * @param Request\RequestInterface $request
      * @param Authentication\Method\MethodInterface $authenticationMethod
-     * @return ResponseInterface
+     * @return Response\ResponseInterface
      */
-    public function sendAuthnRequestToIdp (RequestInterface $request, 
+    public function sendAuthnRequestToIdp (Request\RequestInterface $request, 
         Authentication\Method\MethodInterface $authenticationMethod)
     {
         /* @var $request \Saml\Ecp\Request\IdpAuthnRequest */
@@ -219,37 +223,37 @@ class Client
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         $client->resetParameters();
         
-        return new IdpAuthnResponse($httpResponse);
+        return new Response\IdpAuthnResponse($httpResponse);
     }
 
 
     /**
      * Conveys the processed authn response from the IdP to the SP.
      * 
-     * @param RequestInterface $request
-     * @return ResponseInterface
+     * @param Request\RequestInterface $request
+     * @return Response\ResponseInterface
      */
-    public function sendAuthnResponseToSp (RequestInterface $request)
+    public function sendAuthnResponseToSp (Request\RequestInterface $request)
     {
         /* @var $request \Saml\Ecp\Request\SpConveyAuthnRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new SpConveyAuthnResponse($httpResponse);
+        return new Response\SpConveyAuthnResponse($httpResponse);
     }
 
 
     /**
      * After successful authentication sends a request for the protected resource to the SP.
      * 
-     * @param RequestInterface $request
-     * @return ResponseInterface
+     * @param Request\RequestInterface $request
+     * @return Response\ResponseInterface
      */
-    public function sendResourceRequestToSp (RequestInterface $request)
+    public function sendResourceRequestToSp (Request\RequestInterface $request)
     {
         /* @var $request \Saml\Ecp\Request\SpResourceRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return new SpResourceResponse($httpResponse);
+        return new Response\SpResourceResponse($httpResponse);
     }
     
     /*
