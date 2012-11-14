@@ -31,7 +31,7 @@ class SoapEnvelope extends AbstractValidator
         }
         
         if (! file_exists($schemaFile)) {
-            throw new GeneralException\FileNotFoundException(sprintf("File not found: '%s'", $schemaFile));
+            throw new GeneralException\FileNotFoundException($schemaFile);
         }
         
         if (! is_file($schemaFile)) {
