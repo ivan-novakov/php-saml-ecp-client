@@ -252,7 +252,7 @@ class Client
         $requestFactory = $this->getRequestFactory();
         
         // send PAOS request to SP
-        $spInitialRequest = $requestFactory->createSpInitialRequest();
+        $spInitialRequest = $requestFactory->createSpInitialRequest($this->getProtectedContentUri(true));
         $spInitialResponse = $this->sendInitialRequestToSp($spInitialRequest);
         
         // send authn request to IdP
@@ -283,7 +283,6 @@ class Client
     public function sendInitialRequestToSp (Request\RequestInterface $request)
     {
         /* @var $request \Saml\Ecp\Request\SpInitialRequest */
-        $request->setUri($this->getProtectedContentUri(true));
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         $response = $this->getResponseFactory()

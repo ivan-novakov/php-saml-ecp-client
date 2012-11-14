@@ -2,11 +2,45 @@
 
 namespace Saml\Ecp\Request;
 
+use Saml\Ecp\Soap\Container\BodyCopier;
 use Saml\Ecp\Soap\Container\ContainerInterface;
 
 
 class RequestFactory implements RequestFactoryInterface
 {
+
+    /**
+     * The SOAP body copier object.
+     * 
+     * @var BodyCopier
+     */
+    protected $_soapBodyCopier = null;
+
+
+    /**
+     * Returns the SOAP body copier object.
+     * 
+     * @return BodyCopier
+     */
+    public function getSoapBodyCopier ()
+    {
+        if (! ($this->_soapBodyCopier instanceof BodyCopier)) {
+            $this->_soapBodyCopier = new BodyCopier();
+        }
+        
+        return $this->_soapBodyCopier;
+    }
+
+
+    /**
+     * Sets the SOAP body copier object.
+     * 
+     * @param BodyCopier $soapBodyCopier
+     */
+    public function setSoapBodyCopier (BodyCopier $soapBodyCopier)
+    {
+        $this->_soapBodyCopier = $soapBodyCopier;
+    }
 
 
     /**
@@ -14,9 +48,12 @@ class RequestFactory implements RequestFactoryInterface
      * @see \Saml\Ecp\Request\RequestFactoryInterface::createSpInitialRequest()
      * @return SpInitialRequest
      */
-    public function createSpInitialRequest ()
+    public function createSpInitialRequest ($protectedContentUri)
     {
-        return new SpInitialRequest();
+        $request = new SpInitialRequest();
+        $request->setUri($protectedContentUri);
+        
+        return $request;
     }
 
 
@@ -28,7 +65,8 @@ class RequestFactory implements RequestFactoryInterface
     public function createIdpAuthnRequest (ContainerInterface $soapContainer, $idpEndpointUrl)
     {
         $request = new IdpAuthnRequest();
-        $request->copyDataFromSoap($soapContainer);
+        $this->getSoapBodyCopier()
+            ->copyBody($soapContainer, $request);
         $request->setUri($idpEndpointUrl);
         
         return $request;
@@ -43,7 +81,8 @@ class RequestFactory implements RequestFactoryInterface
     public function createSpAuthnConveyRequest (ContainerInterface $soapContainer, $spEndpointUrl)
     {
         $request = new SpConveyAuthnRequest();
-        $request->copyDataFromSoap($soapContainer);
+        $this->getSoapBodyCopier()
+            ->copyBody($soapContainer, $request);
         $request->setUri($spEndpointUrl);
         
         return $request;

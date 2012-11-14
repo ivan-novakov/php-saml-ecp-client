@@ -18,6 +18,14 @@ interface RequestInterface extends ContainerInterface
 
 
     /**
+     * Returns the target URI of the request.
+     * 
+     * @return string
+     */
+    public function getUri ();
+
+
+    /**
      * Sets the content of the request.
      * 
      * @param string $content

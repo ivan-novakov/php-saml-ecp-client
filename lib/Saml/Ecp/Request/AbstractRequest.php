@@ -68,6 +68,18 @@ abstract class AbstractRequest implements RequestInterface
 
 
     /**
+     * (non-PHPdoc)
+     * @see \Saml\Ecp\Request\RequestInterface::getUri()
+     */
+    public function getUri ()
+    {
+        return $this->getHttpRequest()
+            ->getUri()
+            ->toString();
+    }
+
+
+    /**
      * Sets the HTTP request.
      * 
      * @param Http\Request $request
@@ -140,22 +152,6 @@ abstract class AbstractRequest implements RequestInterface
             $this->_soapMessage = new Message();
         }
         return $this->_soapMessage;
-    }
-
-
-    /**
-     * Copies relevant data from the provided object.
-     * 
-     * @param ContainerInterface $response
-     */
-    public function copyDataFromSoap (ContainerInterface $response)
-    {
-        $soapResponse = $response->getSoapMessage();
-        
-        $soapRequest = $this->getSoapMessage();
-        $soapRequest->copyBodyFromMessage($soapResponse);
-        
-        $this->setSoapMessage($soapRequest);
     }
 
 

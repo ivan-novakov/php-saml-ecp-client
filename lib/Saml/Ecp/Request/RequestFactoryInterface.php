@@ -12,9 +12,10 @@ interface RequestFactoryInterface
     /**
      * Creates the initial request to the SP.
      * 
+     * @param string $protectedContentUri
      * @return RequestInterface
      */
-    public function createSpInitialRequest ();
+    public function createSpInitialRequest ($protectedContentUri);
 
 
     /**
