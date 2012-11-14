@@ -31,7 +31,7 @@ class RequestFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $soapRequest = new Message($this->_getSoapData());
         
-        $soapContainer = $this->getMockBuilder('Saml\Ecp\Soap\ContainerInterface')
+        $soapContainer = $this->getMockBuilder('Saml\Ecp\Soap\Container\ContainerInterface')
             ->getMock();
         $soapContainer->expects($this->once())
             ->method('getSoapMessage')
@@ -45,7 +45,7 @@ class RequestFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $soapRequest = new Message($this->_getSoapData());
         
-        $soapContainer = $this->getMockBuilder('Saml\Ecp\Soap\ContainerInterface')
+        $soapContainer = $this->getMockBuilder('Saml\Ecp\Soap\Container\ContainerInterface')
             ->getMock();
         $soapContainer->expects($this->once())
             ->method('getSoapMessage')

@@ -2,7 +2,7 @@
 
 namespace Saml\Ecp\Request;
 
-use Saml\Ecp\Soap\ContainerInterface;
+use Saml\Ecp\Soap\Container\ContainerInterface;
 
 
 interface RequestFactoryInterface

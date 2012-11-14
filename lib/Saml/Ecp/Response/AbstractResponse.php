@@ -97,7 +97,7 @@ abstract class AbstractResponse implements ResponseInterface
 
     /**
      * (non-PHPdoc)
-     * @see \Saml\Ecp\Soap\ContainerInterface::getSoapMessage()
+     * @see \Saml\Ecp\Soap\Container\ContainerInterface::getSoapMessage()
      * @return Message
      */
     public function getSoapMessage ()
@@ -112,7 +112,7 @@ abstract class AbstractResponse implements ResponseInterface
 
     /**
      * \(non-PHPdoc)
-     * @see \Saml\Ecp\Soap\ContainerInterface::setSoapMessage()
+     * @see \Saml\Ecp\Soap\Container\ContainerInterface::setSoapMessage()
      */
     public function setSoapMessage (Message $soapMessage)
     {

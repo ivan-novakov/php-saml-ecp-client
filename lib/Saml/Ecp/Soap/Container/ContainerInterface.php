@@ -1,6 +1,8 @@
 <?php
 
-namespace Saml\Ecp\Soap;
+namespace Saml\Ecp\Soap\Container;
+
+use Saml\Ecp\Soap\Message;
 
 
 /**

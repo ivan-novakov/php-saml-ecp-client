@@ -2,7 +2,7 @@
 
 namespace Saml\Ecp\Response;
 
-use Saml\Ecp\Soap\ContainerInterface;
+use Saml\Ecp\Soap\Container\ContainerInterface;
 use Saml\Ecp\Soap\Message;
 
 
