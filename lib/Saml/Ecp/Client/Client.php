@@ -9,13 +9,14 @@ use Saml\Ecp\Util\Options;
 use Saml\Ecp\Authentication;
 use Saml\Ecp\Discovery;
 use Zend\Http;
+use Zend\Log;
 
 
 /**
  * Main "bootstrap" class that brings everyhitng in the library together.
  *
  */
-class Client
+class Client implements Log\LoggerAwareInterface
 {
 
     const OPT_PROTECTED_CONTENT_URI = 'protected_content_uri';
@@ -51,6 +52,13 @@ class Client
      * @var Response\Validator\ValidatorFactoryInterface
      */
     protected $_responseValidatorFactory = null;
+
+    /**
+     * Logger.
+     * 
+     * @var Log\LoggerInterface
+     */
+    protected $_logger = null;
 
     /**
      * Options.
@@ -103,6 +111,31 @@ class Client
     public function getOption ($name, $defaultValue = null)
     {
         return $this->_options->get($name, $defaultValue);
+    }
+
+
+    /**
+     * Sets the logger.
+     * 
+     * @param Log\LoggerInterface $logger
+     */
+    public function setLogger (Log\LoggerInterface $logger)
+    {
+        $this->_logger = $logger;
+    }
+
+
+    /**
+     * Returns the logger.
+     * 
+     * @return Log\LoggerInterface
+     */
+    public function getLogger ($throwException = false)
+    {
+        if ($throwException && ! ($this->_logger instanceof Log\LoggerInterface)) {
+            throw new GeneralException\MissingDependencyException('logger');
+        }
+        return $this->_logger;
     }
 
 

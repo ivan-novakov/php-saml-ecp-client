@@ -20,6 +20,27 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testGetLoggerWhichIsNotSet ()
+    {
+        $this->assertNull($this->_client->getLogger());
+    }
+
+
+    public function testGetLoggerWhichIsNotSetThrowException ()
+    {
+        $this->setExpectedException('Saml\Ecp\Exception\MissingDependencyException');
+        $this->_client->getLogger(true);
+    }
+
+
+    public function testGetLoggerAfterBeingSet ()
+    {
+        $logger = $this->getMock('Zend\Log\LoggerInterface');
+        $this->_client->setLogger($logger);
+        $this->assertSame($logger, $this->_client->getLogger());
+    }
+
+
     public function testGetHttpClientWhichIsNotSet ()
     {
         $this->assertInstanceOf('Zend\Http\Client', $this->_client->getHttpClient());
