@@ -23,6 +23,13 @@ class Message
     protected $_xpathManager = null;
 
     /**
+     * The DOM Xpath object.
+     * 
+     * @var \DomXpath
+     */
+    protected $_xpath = null;
+
+    /**
      * The SOAP elements prefix to be used.
      * 
      * @var string
@@ -110,6 +117,7 @@ class Message
     public function setDom (\DomDocument $dom)
     {
         $this->_dom = $dom;
+        $this->_xpath = null;
     }
 
 
@@ -159,8 +167,12 @@ class Message
      */
     public function getXpath ()
     {
-        return $this->getXpathManager()
-            ->getXpath($this->getDom());
+        if (! ($this->_xpath instanceof \DomXpath)) {
+            $this->_xpath = $this->getXpathManager()
+                ->getXpath($this->getDom());
+        }
+        
+        return $this->_xpath;
     }
 
 
@@ -251,13 +263,52 @@ class Message
      * @param \DomElement $child
      * @throws Exception\AppendChildException
      */
-    public function appendChildToElement (\DomElement $element, \DomElement $child)
+    public function appendChildToElement (\DomElement $element,\DomElement $child)
     {
         try {
             return $element->appendChild($child);
         } catch (\Exception $e) {
             throw new Exception\AppendChildException(sprintf("Error appending element: [%s] %s", get_class($e), $e->getMessage()));
         }
+    }
+
+
+    /**
+     * Returns the value of the "service" attribute of the paos:Request header element.
+     * 
+     * XPath: /S:Envelope/S:Header/paos:Request/@service
+     * 
+     * @return string|null
+     */
+    public function getPaosRequestService ()
+    {
+        return $this->_getAttributeValueByXpath('/S:Envelope/S:Header/paos:Request/@service');
+    }
+
+
+    /**
+     * Returns the value of the "responseConsumerURL" attribute of the paos:Request header element.
+     * 
+     * XPath: /S:Envelope/S:Header/paos:Request/@responseConsumerURL
+     * 
+     * @return string|null
+     */
+    public function getPaosRequestResponseConsumerUrl ()
+    {
+        return $this->_getAttributeValueByXpath('/S:Envelope/S:Header/paos:Request/@responseConsumerURL');
+    }
+
+
+    /**
+     * Returns the value of the "AssertionConsumerServiceURL" attribute of the samlp:AuthnRequest element.
+     * 
+     * XPath: /S:Envelope/S:Body/samlp:AuthnRequest/@AssertionConsumerServiceURL
+     * 
+     * @return string|null
+     */
+    public function getAuthnRequestAssertionConsumerServiceUrl ()
+    {
+        return $this->_getAttributeValueByXpath('/S:Envelope/S:Body/samlp:AuthnRequest/@AssertionConsumerServiceURL');
     }
 
 
@@ -362,5 +413,24 @@ class Message
         }
         
         return $namespaces[$prefix];
+    }
+
+
+    /**
+     * Returns the value of an attribute node specified by the provided query.
+     * 
+     * @param string $xpathQuery
+     * @return string|null
+     */
+    protected function _getAttributeValueByXpath ($xpathQuery)
+    {
+        $nodes = $this->getXpath()
+            ->query($xpathQuery);
+        
+        if ($nodes->length) {
+            return $nodes->item(0)->nodeValue;
+        }
+        
+        return null;
     }
 }

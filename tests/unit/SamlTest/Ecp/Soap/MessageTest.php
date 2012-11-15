@@ -13,6 +13,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
      */
     protected $_message = null;
 
+    protected $_paosRequestService = 'urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp';
+
+    protected $_paosRequestResponseConsumerUrl = 'https://hroch.cesnet.cz/Shibboleth.sso/SAML2/ECP';
+
+    protected $_authnRequestAssertionConsumerServiceUrl = 'https://hroch.cesnet.cz/Shibboleth.sso/SAML2/ECP';
+
 
     public function setUp ()
     {
@@ -81,6 +87,18 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    // FIXME - more specific
+    public function testGetHeaderElements ()
+    {
+        $this->_message->fromString($this->_getSoapData());
+        $headerElements = $this->_message->getHeaderElements();
+        
+        $this->assertInstanceOf('DomNodeList', $headerElements);
+        $this->assertSame(3, $headerElements->length);
+    }
+
+
+    // FIXME - more specific
     public function testGetBodyElements ()
     {
         $this->_message->fromString($this->_getSoapData());
@@ -156,18 +174,27 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->_message->copyBodyFromMessage($srcMessage);
         $this->assertEquals($srcMessage->getBodyElements(), $this->_message->getBodyElements());
     }
-    
-    
-    /*
-    public function testToString()
+
+
+    public function testGetPaosRequestService ()
     {
-        $soapData = $this->_getSoapData();
-        
-        $this->_message->fromString($soapData);
-        
-        $this->assertEquals($soapData, $this->_message->toString());
+        $this->_message->fromString($this->_getSoapData());
+        $this->assertSame($this->_paosRequestService, $this->_message->getPaosRequestService());
     }
-    */
+
+
+    public function testGetPaosRequestResponseConsumerUrl ()
+    {
+        $this->_message->fromString($this->_getSoapData());
+        $this->assertSame($this->_paosRequestResponseConsumerUrl, $this->_message->getPaosRequestResponseConsumerUrl());
+    }
+
+
+    public function testGetAuthnRequestAssertionConsumerServiceUrl ()
+    {
+        $this->_message->fromString($this->_getSoapData());
+        $this->assertSame($this->_authnRequestAssertionConsumerServiceUrl, $this->_message->getAuthnRequestAssertionConsumerServiceUrl());
+    }
 
 
     protected function _getSoapData ()
