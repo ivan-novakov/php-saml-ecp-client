@@ -73,6 +73,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
         $chainValidator->addValidator(new SoapEnvelope(array(
             SoapEnvelope::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD)
         )));
+        $chainValidator->addValidator(new SoapHeaderActor());
         
         return $chainValidator;
     }
