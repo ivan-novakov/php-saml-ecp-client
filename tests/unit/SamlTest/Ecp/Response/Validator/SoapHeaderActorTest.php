@@ -22,17 +22,7 @@ class SoapHeaderActorTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValidTrue ()
     {
-        $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $soapMessage->expects($this->once())
-            ->method('getHeaderElements')
-            ->will($this->returnValue($this->_getHeaderElementsNodeList()));
-        
-        $response = $this->getMock('Saml\Ecp\Response\ResponseInterface');
-        $response->expects($this->once())
-            ->method('getSoapMessage')
-            ->will($this->returnValue($soapMessage));
+        $response = $this->_getResponseMock();
         
         $this->assertTrue($this->_validator->isValid($response));
         $this->assertCount(0, $this->_validator->getMessages());
@@ -75,7 +65,6 @@ class SoapHeaderActorTest extends \PHPUnit_Framework_TestCase
         $dom = new \DOMDocument();
         $dom->load(TESTS_FILES_DIR . 'soap-saml-authn-request.xml');
         
-        $nodes = $dom->getElementsByTagNameNS('http://schemas.xmlsoap.org/soap/envelope/', 'Header');
         $xpath = new \DOMXPath($dom);
         $xpath->registerNamespace('S', 'http://schemas.xmlsoap.org/soap/envelope/');
         $elements = $xpath->query('/S:Envelope/S:Header/*');
