@@ -181,6 +181,20 @@ class Message
 
 
     /**
+     * Returns the list of S:Header elements.
+     * 
+     * @return \DOMNodeList
+     */
+    public function getHeaderElements ()
+    {
+        $xpath = $this->getXpath();
+        $elements = $xpath->query(sprintf("/%s:Envelope/%s:Header/*", $this->_soapNsPrefix, $this->_soapNsPrefix));
+        
+        return $elements;
+    }
+
+
+    /**
      * Returns the list of the S:Body child elements.
      * 
      * @return \DOMNodeList
@@ -237,7 +251,7 @@ class Message
      * @param \DomElement $child
      * @throws Exception\AppendChildException
      */
-    public function appendChildToElement (\DomElement $element,\DomElement $child)
+    public function appendChildToElement (\DomElement $element, \DomElement $child)
     {
         try {
             return $element->appendChild($child);
