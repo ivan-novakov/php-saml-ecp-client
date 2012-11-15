@@ -75,6 +75,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
         )));
         $chainValidator->addValidator(new SoapHeaderActor());
         $chainValidator->addValidator(new SamlAuthnRequest());
+        $chainValidator->addValidator(new PaosRequest());
         
         return $chainValidator;
     }
