@@ -120,12 +120,21 @@ abstract class AbstractResponse implements ResponseInterface
     }
 
 
-    protected function _validateStatusCode ()
+    /**
+     * FIXME - move to separate object - ResponseSerializer
+     *
+     * @return string
+     */
+    public function __toString ()
     {
-        $httpResponse = $this->getHttpResponse();
-        
-        if (200 != $httpResponse->getStatusCode()) {
-            throw new Exception\BadResponseStatusException($httpResponse->getStatusCode());
-        }
+        return sprintf("%s: [%d]", $this->_getResponseName(), $this->getHttpResponse()
+            ->getStatusCode());
+    }
+
+
+    protected function _getResponseName ()
+    {
+        $className = get_class($this);
+        return substr($className, strrpos($className, '\\') + 1);
     }
 }

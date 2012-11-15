@@ -25,5 +25,5 @@ $client = new Client($globalConfig->get('client'));
 $client->setLogger($logger);
 
 $response = $client->authenticate($authenticationMethod, $discoveryMethod);
-_dump((string) $response->getHttpResponse());
+
 

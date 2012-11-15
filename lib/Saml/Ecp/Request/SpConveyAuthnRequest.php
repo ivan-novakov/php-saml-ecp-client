@@ -10,12 +10,6 @@ class SpConveyAuthnRequest extends AbstractRequest
 {
 
 
-    public function setSoapMessage (Message $soapMessage)
-    {
-        parent::setSoapMessage($soapMessage);
-    }
-
-
     protected function _init ()
     {
         $httpRequest = $this->getHttpRequest();

@@ -155,6 +155,25 @@ abstract class AbstractRequest implements RequestInterface
     }
 
 
+    /**
+     * FIXME - move to separate object - RequestSerializer
+     * 
+     * @return string
+     */
+    public function __toString ()
+    {
+        return sprintf("%s: [%s] %s", $this->_getRequestName(), $this->getHttpRequest()
+            ->getMethod(), $this->getUri());
+    }
+
+
+    protected function _getRequestName ()
+    {
+        $className = get_class($this);
+        return substr($className, strrpos($className, '\\') + 1);
+    }
+
+
     protected function _init ()
     {}
 }

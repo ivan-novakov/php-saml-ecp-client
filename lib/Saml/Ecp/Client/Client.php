@@ -310,6 +310,7 @@ class Client implements Log\LoggerAwareInterface
         $spResourceRequest = $requestFactory->createSpResourceRequest($this->getProtectedContentUri());
         $spResourceResponse = $this->sendResourceRequestToSp($spResourceRequest);
         
+        $this->info('Identity info: ' . $spResourceResponse->getHttpResponse()->getBody());
         return $spResourceResponse;
     }
 
@@ -324,7 +325,9 @@ class Client implements Log\LoggerAwareInterface
      * @return Response\ResponseInterface
      */
     public function sendInitialRequestToSp (Request\RequestInterface $request)
-    {        
+    {
+        $this->info($request);
+        
         /* @var $request \Saml\Ecp\Request\SpInitialRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
@@ -335,6 +338,7 @@ class Client implements Log\LoggerAwareInterface
         
         $this->validateResponse($validator, $response, 'initial SP response');
         
+        $this->info($response);
         return $response;
     }
 
@@ -351,6 +355,8 @@ class Client implements Log\LoggerAwareInterface
     public function sendAuthnRequestToIdp (Request\RequestInterface $request, 
         Authentication\Method\MethodInterface $authenticationMethod)
     {
+        $this->info($request);
+        
         /* @var $request \Saml\Ecp\Request\IdpAuthnRequest */
         $client = $this->getHttpClient();
         $authenticationMethod->configureHttpClient($client);
@@ -364,6 +370,7 @@ class Client implements Log\LoggerAwareInterface
         
         $this->validateResponse($validator, $response, 'IdP authn response');
         
+        $this->info($response);
         return $response;
     }
 
@@ -376,11 +383,16 @@ class Client implements Log\LoggerAwareInterface
      */
     public function sendAuthnResponseToSp (Request\RequestInterface $request)
     {
+        $this->info($request);
+        
         /* @var $request \Saml\Ecp\Request\SpConveyAuthnRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return $this->getResponseFactory()
+        $response = $this->getResponseFactory()
             ->createSpConveryAuthnResponse($httpResponse);
+        
+        $this->info($response);
+        return $response;
     }
 
 
@@ -392,11 +404,16 @@ class Client implements Log\LoggerAwareInterface
      */
     public function sendResourceRequestToSp (Request\RequestInterface $request)
     {
+        $this->info($request);
+        
         /* @var $request \Saml\Ecp\Request\SpResourceRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
-        return $this->getResponseFactory()
+        $response = $this->getResponseFactory()
             ->createSpResourceResponse($httpResponse);
+        
+        $this->info($response);
+        return $response;
     }
 
 
