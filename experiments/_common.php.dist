@@ -1,6 +1,8 @@
 <?php
 use Zend\Http\Client;
 
+require __DIR__ . '/../vendor/autoload.php';
+
 $globalConfig = new \Zend\Config\Config(array(
     'credentials' => array(
         'username' => 'testuser', 
@@ -14,7 +16,8 @@ $globalConfig = new \Zend\Config\Config(array(
     ), 
     
     'client' => array(
-        'protected_content_uri' => 'https://sp.example.org/devel/secure/', 
+        'protected_content_uri' => 'https://sp.example.org/devel/secure/',
+        'soap_envelope_xsd' => __DIR__ . '/../schema/soap11-envelope.xsd', 
         
         'http_client' => array(
             'options' => array(
@@ -28,6 +31,11 @@ $globalConfig = new \Zend\Config\Config(array(
                 )
             )
         )
+    ),
+         
+    'logger' => array(
+        'file' => 'php://output', 
+        'priority' => 7
     )
 ));
 

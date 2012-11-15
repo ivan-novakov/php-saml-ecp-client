@@ -15,6 +15,16 @@ use Zend\Log;
 /**
  * Main "bootstrap" class that brings everyhitng in the library together.
  *
+ * "Magic" log calls caught in __call():
+ * 
+ * @method void emerg()    emerg(string $message)
+ * @method void alert()    alert(string $message)
+ * @method void crit()     crit(string $message)
+ * @method void err()      err(string $message)
+ * @method void warn()     warn(string $message)
+ * @method void notice()   notice(string $message)
+ * @method void info()     info(string $message)
+ * @method void debug()    debug(string $message)
  */
 class Client implements Log\LoggerAwareInterface
 {
@@ -314,7 +324,7 @@ class Client implements Log\LoggerAwareInterface
      * @return Response\ResponseInterface
      */
     public function sendInitialRequestToSp (Request\RequestInterface $request)
-    {
+    {        
         /* @var $request \Saml\Ecp\Request\SpInitialRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
@@ -416,11 +426,57 @@ class Client implements Log\LoggerAwareInterface
         
         return $valid;
     }
+
+
+    /**
+     * The __call() magic method.
+     * 
+     * Used to catch logging calls and route them to the logger.
+     * 
+     * @param string $method
+     * @param array $args
+     */
+    public function __call ($method, array $args)
+    {
+        $logMethods = array(
+            'emerg', 
+            'alert', 
+            'crit', 
+            'err', 
+            'warn', 
+            'notice', 
+            'info', 
+            'debug'
+        );
+        
+        if (in_array($method, $logMethods)) {
+            if (isset($args[0])) {
+                $message = $args[0];
+            } else {
+                $message = '';
+            }
+            return $this->_log($method, $message);
+        }
+    }
     
     /*
      * Protected/private
      */
     
+    /**
+     * Logs a message with the provided method, if the logger is set.
+     * 
+     * @param string $method
+     * @param string $message
+     */
+    protected function _log ($method, $message)
+    {
+        if ($logger = $this->getLogger()) {
+            $logger->$method($message);
+        }
+    }
+
+
     /**
      * Creates and returns the HTTP client based on the provided configuration.
      * 

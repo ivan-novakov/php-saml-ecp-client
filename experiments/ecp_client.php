@@ -13,8 +13,17 @@ $discoveryOptions = $globalConfig->get('discovery')
     ->get('options');
 $discoveryMethod = new StaticIdp($discoveryOptions->toArray());
 
-$client = new Client($globalConfig->get('client'));
-$response = $client->authenticate($authenticationMethod, $discoveryMethod);
+$logger = new Zend\Log\Logger();
+$writer = new Zend\Log\Writer\Stream($globalConfig->get('logger')
+    ->get('file'));
+$filter = new Zend\Log\Filter\Priority($globalConfig->get('logger')
+    ->get('priority'));
+$writer->addFilter($filter);
+$logger->addWriter($writer);
 
+$client = new Client($globalConfig->get('client'));
+$client->setLogger($logger);
+
+$response = $client->authenticate($authenticationMethod, $discoveryMethod);
 _dump((string) $response->getHttpResponse());
 
