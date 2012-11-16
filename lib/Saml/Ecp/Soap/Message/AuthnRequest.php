@@ -7,18 +7,39 @@ class AuthnRequest extends Message
 {
 
 
+    /**
+     * Returns the "service" attribute of the "paos:Request" header element.
+     * 
+     * XPath: /S:Envelope/S:Header/paos:Request/@service
+     * 
+     * @return string
+     */
     public function getPaosRequestService ()
     {
         return $this->getNodeValueByXpath('/S:Envelope/S:Header/paos:Request/@service');
     }
 
 
+    /**
+     * Returns the "responseConsumerURL" attribute of the "paos:Request" header element;
+     * 
+     * XPath: /S:Envelope/S:Header/paos:Request/@responseConsumerURL
+     * 
+     * @return string
+     */
     public function getPaosResponseConsumerUrl ()
     {
         return $this->getNodeValueByXpath('/S:Envelope/S:Header/paos:Request/@responseConsumerURL');
     }
 
 
+    /**
+     * Returns the "AssertionConsumerServiceURL" attribute of the "samlp:AuthnRequest" body element.
+     * 
+     * XPath: /S:Envelope/S:Body/samlp:AuthnRequest/@AssertionConsumerServiceURL
+     * 
+     * @return string
+     */
     public function getAssertionConsumerServiceUrl ()
     {
         return $this->getNodeValueByXpath('/S:Envelope/S:Body/samlp:AuthnRequest/@AssertionConsumerServiceURL');
