@@ -2,26 +2,15 @@
 
 namespace Saml\Ecp\Response;
 
+use Saml\Ecp\Soap\Message\AuthnResponse;
+
+
 /**
  * The response sent by the IdP after sending the authn request.
  *
  */
 class IdpAuthnResponse extends AbstractResponse
 {
-
-
-    /**
-     * (non-PHPdoc)
-     * @see \Saml\Ecp\Response\Response::validate()
-     */
-    public function validate (array $validateOptions = array())
-    {
-        $this->_validateStatusCode();
-        
-        // validate AssertionConsumerServiceURL
-        //$soapMessage = $this->getSoapMessage();
-        //_dumpx($soapMessage->toString());
-    }
 
 
     /**
@@ -32,14 +21,10 @@ class IdpAuthnResponse extends AbstractResponse
      */
     public function getConsumerEndpointUrl ()
     {
-        $responseElement = $this->_getSamlResponseXmlElement();
-        if (! $responseElement) {
-            throw new Exception\InvalidResponseException("The SAML response does not contain a 'Response' element");
-        }
-        
-        $url = $responseElement->getAttribute('Destination');
+        $url = $this->getSoapMessage()
+            ->getAssertionConsumerServiceUrl();
         if (! $url) {
-            throw new Exception\InvalidResponseException("No 'Destination' attribute in the 'Response' element");
+            throw new Exception\InvalidResponseException('Missing AssertionConsumerServiceUrl');
         }
         
         return $url;
@@ -47,20 +32,11 @@ class IdpAuthnResponse extends AbstractResponse
 
 
     /**
-     * Returns the SAML2 Response element.
-     * 
-     * @return \DomElement|null
+     * (non-PHPdoc)
+     * @see \Saml\Ecp\Response\AbstractResponse::_createSoapMessage()
      */
-    protected function _getSamlResponseXmlElement ()
+    protected function _createSoapMessage ($content)
     {
-        $xpath = $this->getSoapMessage()
-            ->getXpath();
-        
-        $nodes = $xpath->query('/S:Envelope/S:Body/samlp:Response');
-        if ($nodes->length) {
-            return $nodes->item(0);
-        }
-        
-        return null;
+        return new AuthnResponse($content);
     }
 }
