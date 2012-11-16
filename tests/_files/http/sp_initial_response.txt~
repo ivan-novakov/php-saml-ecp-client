@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+Date: Fri, 16 Nov 2012 12:42:57 GMT
+Server: Apache
+Expires: 01-Jan-1997 12:00:00 GMT
+Cache-Control: no-cache, no-store, must-revalidate, private
+Pragma: no-cache
+Content-Length: 1648
+Connection: close
+Content-Type: application/vnd.paos+xml
+
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Header><paos:Request xmlns:paos="urn:liberty:paos:2003-08" S:actor="http://schemas.xmlsoap.org/soap/actor/next" S:mustUnderstand="1" responseConsumerURL="https://sp.example.org/Shibboleth.sso/SAML2/ECP" service="urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp"/><ecp:Request xmlns:ecp="urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp" IsPassive="0" S:actor="http://schemas.xmlsoap.org/soap/actor/next" S:mustUnderstand="1"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">https://sp.example.org/shibboleth</saml:Issuer><samlp:IDPList xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><samlp:IDPEntry ProviderID="https://login.fel.cvut.cz/idp/shibboleth"/></samlp:IDPList></ecp:Request><ecp:RelayState xmlns:ecp="urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp" S:actor="http://schemas.xmlsoap.org/soap/actor/next" S:mustUnderstand="1">ss:mem:efcb6c07a2a8e492fb96efed376f0da81ec1d5401f5f6d49ecaa366de5fc33bd</ecp:RelayState></S:Header><S:Body><samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" AssertionConsumerServiceURL="https://sp.example.org/Shibboleth.sso/SAML2/ECP" ID="_2369ed4591f3fd3c1ae3454509f9d56b" IssueInstant="2012-11-16T12:42:57Z" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Version="2.0"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">https://sp.example.org/shibboleth</saml:Issuer><samlp:NameIDPolicy AllowCreate="1"/><samlp:Scoping><samlp:IDPList><samlp:IDPEntry ProviderID="https://login.fel.cvut.cz/idp/shibboleth"/></samlp:IDPList></samlp:Scoping></samlp:AuthnRequest></S:Body></S:Envelope>

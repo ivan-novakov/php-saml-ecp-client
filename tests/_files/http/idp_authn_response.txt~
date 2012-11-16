@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Date: Fri, 16 Nov 2012 12:58:03 GMT
+Expires: 0
+Cache-Control: no-cache, no-store
+Pragma: no-cache
+SOAPAction: http://www.oasis-open.org/committees/security
+Content-Type: text/xml;charset=UTF-8
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 10224
+Connection: close
+

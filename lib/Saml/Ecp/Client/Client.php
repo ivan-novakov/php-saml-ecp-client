@@ -301,7 +301,7 @@ class Client implements Log\LoggerAwareInterface
         // send authn request to IdP
         $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($spInitialResponse, $discoveryMethod->getIdpEcpEndpoint());
         $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
-        
+        _dump((string) $idpAuthnResponse->getContent());
         // convey the authn response back to the SP
         $spConveyRequest = $requestFactory->createSpAuthnConveyRequest($idpAuthnResponse, $idpAuthnResponse->getConsumerEndpointUrl());
         $spConveyResponse = $this->sendAuthnResponseToSp($spConveyRequest);
@@ -310,7 +310,8 @@ class Client implements Log\LoggerAwareInterface
         $spResourceRequest = $requestFactory->createSpResourceRequest($this->getProtectedContentUri());
         $spResourceResponse = $this->sendResourceRequestToSp($spResourceRequest);
         
-        $this->info('Identity info: ' . $spResourceResponse->getHttpResponse()->getBody());
+        $this->info('Identity info: ' . $spResourceResponse->getHttpResponse()
+            ->getBody());
         return $spResourceResponse;
     }
 

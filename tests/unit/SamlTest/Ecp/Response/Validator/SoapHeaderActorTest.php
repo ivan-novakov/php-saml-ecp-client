@@ -63,7 +63,7 @@ class SoapHeaderActorTest extends \PHPUnit_Framework_TestCase
     protected function _getHeaderElementsNodeList ()
     {
         $dom = new \DOMDocument();
-        $dom->load(TESTS_FILES_DIR . 'soap-saml-authn-request.xml');
+        $dom->load(TESTS_FILES_DIR . 'soap/soap-saml-authn-request.xml');
         
         $xpath = new \DOMXPath($dom);
         $xpath->registerNamespace('S', 'http://schemas.xmlsoap.org/soap/envelope/');

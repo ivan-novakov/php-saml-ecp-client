@@ -4,6 +4,7 @@
     <testsuites>
         <testsuite name="unit tests">
             <directory>./unit/</directory>
+            <directory>./integration/</directory>
         </testsuite>
     </testsuites>
 

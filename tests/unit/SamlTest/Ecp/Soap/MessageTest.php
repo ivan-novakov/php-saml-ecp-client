@@ -40,22 +40,6 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testFromString ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $dom = $this->_message->getDom();
-        
-        $this->assertInstanceOf('DomDocument', $dom);
-    }
-
-
-    public function testFromBadString ()
-    {
-        $this->setExpectedException('Saml\Ecp\Soap\Exception\LoadSoapDataException');
-        $this->_message->fromString('bad XML string');
-    }
-
-
     public function testGetXpathManagerNotSet ()
     {
         $this->assertInstanceOf('Saml\Ecp\Soap\XpathManager', $this->_message->getXpathManager());
@@ -73,49 +57,19 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
     public function testGetXpath ()
     {
-        $this->assertInstanceOf('DomXpath', $this->_message->getXpath());
-    }
-
-
-    public function testGetBody ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $body = $this->_message->getBody();
+        $xpath = $this->getMockBuilder('DomXpath')
+            ->disableOriginalConstructor()
+            ->getMock();
         
-        $this->assertInstanceOf('DomElement', $body);
-        $this->assertSame('Body', $body->localName);
-    }
-
-
-    // FIXME - more specific
-    public function testGetHeaderElements ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $headerElements = $this->_message->getHeaderElements();
+        $xpathManager = $this->getMock('Saml\Ecp\Soap\XpathManager');
+        $xpathManager->expects($this->once())
+            ->method('getXpath')
+            ->with($this->isInstanceOf('DomDocument'))
+            ->will($this->returnValue($xpath));
         
-        $this->assertInstanceOf('DomNodeList', $headerElements);
-        $this->assertSame(3, $headerElements->length);
-    }
-
-
-    // FIXME - more specific
-    public function testGetBodyElements ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $bodyElements = $this->_message->getBodyElements();
+        $this->_message->setXpathManager($xpathManager);
         
-        $this->assertInstanceOf('DomNodeList', $bodyElements);
-        $this->assertSame(1, $bodyElements->length);
-    }
-
-
-    public function testAddBodyElement ()
-    {
-        $bodyElement = new \DOMElement('TestElement');
-        $this->_message->addBodyElement($bodyElement);
-        $bodyElements = $this->_message->getBodyElements();
-        
-        $this->assertEquals($bodyElement, $bodyElements->item(0));
+        $this->assertSame($xpath, $this->_message->getXpath());
     }
 
 
@@ -164,36 +118,6 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new \DomException()));
         
         $this->_message->appendChildToElement($element, $child);
-    }
-
-
-    public function testCopyBodyFromMessage ()
-    {
-        $srcMessage = new Message($this->_getSoapData());
-        
-        $this->_message->copyBodyFromMessage($srcMessage);
-        $this->assertEquals($srcMessage->getBodyElements(), $this->_message->getBodyElements());
-    }
-
-
-    public function testGetPaosRequestService ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $this->assertSame($this->_paosRequestService, $this->_message->getPaosRequestService());
-    }
-
-
-    public function testGetPaosRequestResponseConsumerUrl ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $this->assertSame($this->_paosRequestResponseConsumerUrl, $this->_message->getPaosRequestResponseConsumerUrl());
-    }
-
-
-    public function testGetAuthnRequestAssertionConsumerServiceUrl ()
-    {
-        $this->_message->fromString($this->_getSoapData());
-        $this->assertSame($this->_authnRequestAssertionConsumerServiceUrl, $this->_message->getAuthnRequestAssertionConsumerServiceUrl());
     }
 
 
