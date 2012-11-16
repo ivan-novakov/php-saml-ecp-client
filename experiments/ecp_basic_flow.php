@@ -1,5 +1,6 @@
 <?php
 
+use Saml\Ecp\Flow;
 use Saml\Ecp\Client\Client;
 use Saml\Ecp\Discovery\Method\StaticIdp;
 use Saml\Ecp\Authentication\Method\BasicAuth;
@@ -24,6 +25,6 @@ $logger->addWriter($writer);
 $client = new Client($globalConfig->get('client'));
 $client->setLogger($logger);
 
-$response = $client->authenticate($authenticationMethod, $discoveryMethod);
-
-
+$flow = new Flow\Basic();
+$flow->setClient($client);
+$response = $flow->authenticate($authenticationMethod, $discoveryMethod);

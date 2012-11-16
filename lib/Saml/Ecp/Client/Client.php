@@ -285,38 +285,6 @@ class Client implements Log\LoggerAwareInterface
 
 
     /**
-     * Performs the whole authentication flow. 
-     * 
-     * @param Authentication\Method\MethodInterface $authenticationMethod
-     */
-    public function authenticate (Authentication\Method\MethodInterface $authenticationMethod, 
-        Discovery\Method\MethodInterface $discoveryMethod)
-    {
-        $requestFactory = $this->getRequestFactory();
-        
-        // send PAOS request to SP
-        $spInitialRequest = $requestFactory->createSpInitialRequest($this->getProtectedContentUri(true));
-        $spInitialResponse = $this->sendInitialRequestToSp($spInitialRequest);
-        
-        // send authn request to IdP
-        $idpAuthnRequest = $requestFactory->createIdpAuthnRequest($spInitialResponse, $discoveryMethod->getIdpEcpEndpoint());
-        $idpAuthnResponse = $this->sendAuthnRequestToIdp($idpAuthnRequest, $authenticationMethod);
-        _dump((string) $idpAuthnResponse->getContent());
-        // convey the authn response back to the SP
-        $spConveyRequest = $requestFactory->createSpAuthnConveyRequest($idpAuthnResponse, $idpAuthnResponse->getConsumerEndpointUrl());
-        $spConveyResponse = $this->sendAuthnResponseToSp($spConveyRequest);
-        
-        // access protected resource
-        $spResourceRequest = $requestFactory->createSpResourceRequest($this->getProtectedContentUri());
-        $spResourceResponse = $this->sendResourceRequestToSp($spResourceRequest);
-        
-        $this->info('Identity info: ' . $spResourceResponse->getHttpResponse()
-            ->getBody());
-        return $spResourceResponse;
-    }
-
-
-    /**
      * Send the initial request to the SP.
      * 
      * This should be the first step in the authentication flow. The client tries to access a protected
@@ -414,6 +382,8 @@ class Client implements Log\LoggerAwareInterface
             ->createSpResourceResponse($httpResponse);
         
         $this->info($response);
+        
+        $this->info('Identity info: ' . $response->getContent());
         return $response;
     }
 
@@ -475,6 +445,8 @@ class Client implements Log\LoggerAwareInterface
             }
             return $this->_log($method, $message);
         }
+        
+        throw new \RuntimeException(sprintf("Undefined method '%s'", $method));
     }
     
     /*
