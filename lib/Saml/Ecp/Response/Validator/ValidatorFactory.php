@@ -87,6 +87,11 @@ class ValidatorFactory implements ValidatorFactoryInterface
      */
     public function createIdpAuthnResponseValidator ()
     {
-        return new HttpStatus();
+        $chainValidator = new Chain();
+        
+        $chainValidator->addValidator(new HttpStatus());
+        $chainValidator->addValidator(new SamlAuthnResponse());
+        
+        return $chainValidator;
     }
 }
