@@ -1,8 +1,8 @@
 <?php
 
-namespace SamlIntegrationTest\Ecp\Soap;
+namespace SamlIntegrationTest\Ecp\Soap\Message;
 
-use Saml\Ecp\Soap\Message;
+use Saml\Ecp\Soap\Message\Message;
 
 
 class MessageTest extends \PHPUnit_Framework_TestCase

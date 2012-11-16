@@ -1,8 +1,8 @@
 <?php
 
-namespace SamlTest\Ecp\Soap;
+namespace SamlTest\Ecp\Soap\Message;
 
-use Saml\Ecp\Soap\Message;
+use Saml\Ecp\Soap\Message\Message;
 
 
 class MessageTest extends \PHPUnit_Framework_TestCase
@@ -118,12 +118,6 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException(new \DomException()));
         
         $this->_message->appendChildToElement($element, $child);
-    }
-
-
-    protected function _getSoapData ()
-    {
-        return file_get_contents(TESTS_FILES_DIR . 'soap-saml-authn-request.xml');
     }
 
 

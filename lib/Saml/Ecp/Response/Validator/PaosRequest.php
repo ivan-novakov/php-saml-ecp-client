@@ -2,6 +2,7 @@
 
 namespace Saml\Ecp\Response\Validator;
 
+use Saml\Ecp\Soap\Message\AuthnRequest;
 use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Response\ResponseInterface;
 
@@ -34,22 +35,34 @@ class PaosRequest extends AbstractValidator
      */
     public function isValid (ResponseInterface $response)
     {
+        return $this->_isValidSoapMessage($response->getSoapMessage());
+    }
+
+
+    /**
+     * Validates the SAML AuthnRequest message.
+     * 
+     * @param AuthnRequest $soapMessage
+     * @return boolean
+     */
+    protected function _isValidSoapMessage (AuthnRequest $soapMessage)
+    {
         $valid = true;
         
         $expectedService = $this->getOption(self::OPT_SERVICE_VALUE, $this->_defServiceValue);
-        $service = $response->getPaosRequestService();
+        $service = $soapMessage->getPaosRequestService();
         if ($service != $expectedService) {
             $this->addMessage(sprintf("paos:Request element declares service '%s' different from the expected '%s'", $service, $expectedService));
             $valid = false;
         }
         
-        $paosConsumerUrl = $response->getPaosResponseConsumerUrl();
+        $paosConsumerUrl = $soapMessage->getPaosResponseConsumerUrl();
         if (null === $paosConsumerUrl) {
             $this->addMessage('The paos:Request/@responseConsumerURL must not be null');
             $valid = false;
         }
         
-        $samlAuthnRequestConsumerUrl = $response->getAssertionConsumerServiceUrl();
+        $samlAuthnRequestConsumerUrl = $soapMessage->getAssertionConsumerServiceUrl();
         if (null === $samlAuthnRequestConsumerUrl) {
             $this->addMessage('The samlp:AuthnRequest/@AssertionConsumerServiceURL must not be null');
             $valid = false;

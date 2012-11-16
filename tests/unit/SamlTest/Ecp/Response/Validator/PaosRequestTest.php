@@ -26,7 +26,6 @@ class PaosRequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsValidTrue ($service, $paosServiceUrl, $samlServiceUrl, $isValid, $msgCount)
     {
-        $this->markTestIncomplete();
         $response = $this->_getResponseMock($service, $paosServiceUrl, $samlServiceUrl);
         
         $this->assertSame($isValid, $this->_validator->isValid($response));
@@ -71,16 +70,23 @@ class PaosRequestTest extends \PHPUnit_Framework_TestCase
 
     public function _getResponseMock ($service, $paosServiceUrl, $samlServiceUrl)
     {
-        $response = $this->getMock('Saml\Ecp\Response\ResponseInterface');
-        $response->expects($this->once())
+        $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message\AuthnRequest')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $soapMessage->expects($this->once())
             ->method('getPaosRequestService')
             ->will($this->returnValue($service));
-        $response->expects($this->any())
+        $soapMessage->expects($this->any())
             ->method('getPaosResponseConsumerUrl')
             ->will($this->returnValue($paosServiceUrl));
-        $response->expects($this->any())
+        $soapMessage->expects($this->any())
             ->method('getAssertionConsumerServiceUrl')
             ->will($this->returnValue($samlServiceUrl));
+        
+        $response = $this->getMock('Saml\Ecp\Response\ResponseInterface');
+        $response->expects($this->once())
+            ->method('getSoapMessage')
+            ->will($this->returnValue($soapMessage));
         
         return $response;
     }

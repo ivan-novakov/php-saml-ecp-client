@@ -2,7 +2,6 @@
 
 namespace SamlTest\Ecp\Request;
 
-use Saml\Ecp\Soap\Message;
 use Saml\Ecp\Request\RequestFactory;
 
 

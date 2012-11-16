@@ -2,7 +2,7 @@
 
 namespace Saml\Ecp\Response;
 
-use Saml\Ecp\Soap\Message;
+use Saml\Ecp\Soap\Message\Message;
 use Saml\Ecp\Util\Options;
 use Zend\Http;
 
@@ -103,7 +103,7 @@ abstract class AbstractResponse implements ResponseInterface
     public function getSoapMessage ()
     {
         if (! ($this->_soapMessage instanceof Message)) {
-            $this->_soapMessage = new Message($this->getContent());
+            $this->_soapMessage = $this->_createSoapMessage($this->getContent());
         }
         
         return $this->_soapMessage;
@@ -136,5 +136,17 @@ abstract class AbstractResponse implements ResponseInterface
     {
         $className = get_class($this);
         return substr($className, strrpos($className, '\\') + 1);
+    }
+
+
+    /**
+     * Creates and returns a SOAP message object with the provided content.
+     * 
+     * @param string $content
+     * @return Message
+     */
+    protected function _createSoapMessage ($content)
+    {
+        return new Message($content);
     }
 }

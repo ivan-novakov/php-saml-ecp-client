@@ -3,7 +3,7 @@
 namespace Saml\Ecp\Request;
 
 use Saml\Ecp\Soap\Container\ContainerInterface;
-use Saml\Ecp\Soap\Message;
+use Saml\Ecp\Soap\Message\Message;
 use Saml\Ecp\Util\Options;
 use Zend\Http;
 
@@ -149,7 +149,7 @@ abstract class AbstractRequest implements RequestInterface
     public function getSoapMessage ()
     {
         if (! ($this->_soapMessage instanceof Message)) {
-            $this->_soapMessage = new Message();
+            $this->_soapMessage = $this->_createSoapMessage();
         }
         return $this->_soapMessage;
     }
@@ -171,6 +171,17 @@ abstract class AbstractRequest implements RequestInterface
     {
         $className = get_class($this);
         return substr($className, strrpos($className, '\\') + 1);
+    }
+
+
+    /**
+     * Creates and returns s SOAP message object.
+     * 
+     * @return Message
+     */
+    protected function _createSoapMessage ()
+    {
+        return new Message();
     }
 
 

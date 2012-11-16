@@ -44,7 +44,7 @@ class SoapHeaderActorTest extends \PHPUnit_Framework_TestCase
 
     public function _getResponseMock ()
     {
-        $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message')
+        $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message\Message')
             ->disableOriginalConstructor()
             ->getMock();
         $soapMessage->expects($this->once())

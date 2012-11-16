@@ -107,7 +107,7 @@ class SoapEnvelopeTest extends \PHPUnit_Framework_TestCase
             ->method('schemaValidate')
             ->will($schemaValidateWill);
         
-        $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message')
+        $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message\Message')
             ->disableOriginalConstructor()
             ->getMock();
         $soapMessage->expects($this->once())

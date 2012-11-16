@@ -2,7 +2,7 @@
 
 namespace Saml\Ecp\Soap\Container;
 
-use Saml\Ecp\Soap\Message;
+use Saml\Ecp\Soap\Message\Message;
 
 
 /**

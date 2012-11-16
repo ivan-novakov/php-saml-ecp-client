@@ -11,7 +11,7 @@ class BodyCopierTest extends \PHPUnit_Framework_TestCase
 
     public function testCopyBody ()
     {
-        $fromSoap = $this->getMockBuilder('Saml\Ecp\Soap\Message')
+        $fromSoap = $this->getMockBuilder('Saml\Ecp\Soap\Message\Message')
             ->disableOriginalConstructor()
             ->getMock();
         
@@ -20,7 +20,7 @@ class BodyCopierTest extends \PHPUnit_Framework_TestCase
             ->method('getSoapMessage')
             ->will($this->returnValue($fromSoap));
         
-        $toSoap = $this->getMockBuilder('Saml\Ecp\Soap\Message')
+        $toSoap = $this->getMockBuilder('Saml\Ecp\Soap\Message\Message')
             ->disableOriginalConstructor()
             ->getMock();
         $toSoap->expects($this->once())

@@ -1,7 +1,10 @@
 <?php
 
-namespace Saml\Ecp\Soap;
+namespace Saml\Ecp\Soap\Message;
 
+use Saml\Ecp\Soap\XpathManager;
+use Saml\Ecp\Soap\Namespaces;
+use Saml\Ecp\Soap\Exception as SoapException;
 use Zend\Stdlib\ErrorHandler;
 
 
@@ -71,6 +74,7 @@ class Message
      * Loads the SOAP message from a string.
      * 
      * @param string $soapData
+     * @throws SoapException\LoadSoapDataException
      */
     public function fromString ($soapData)
     {
@@ -84,12 +88,12 @@ class Message
             if (ErrorHandler::started()) {
                 ErrorHandler::stop();
             }
-            throw new Exception\LoadSoapDataException($e->getMessage());
+            throw new SoapException\LoadSoapDataException($e->getMessage());
         }
         
         $rootElement = $dom->documentElement;
         if ('envelope' != strtolower($rootElement->localName)) {
-            throw new Exception\LoadSoapDataException(sprintf("Invalid root element '%s'", $rootElement->localName));
+            throw new SoapException\LoadSoapDataException(sprintf("Invalid root element '%s'", $rootElement->localName));
         }
     }
 
@@ -235,6 +239,7 @@ class Message
      * Adds the provided element to the message body.
      * 
      * @param \DomElement $element
+     * @throws SoapException\ImportNodeException
      */
     public function addBodyElement (\DomElement $element)
     {
@@ -243,7 +248,7 @@ class Message
         try {
             $node = $dom->importNode($element, true);
         } catch (\Exception $e) {
-            throw new Exception\ImportNodeException(sprintf("Error importing node: [%s] %s", get_class($e), $e->getMessage()));
+            throw new SoapException\ImportNodeException(sprintf("Error importing node: [%s] %s", get_class($e), $e->getMessage()));
         }
         
         $body = $this->getBody();
@@ -272,14 +277,14 @@ class Message
      * 
      * @param \DomElement $element
      * @param \DomElement $child
-     * @throws Exception\AppendChildException
+     * @throws SoapException\AppendChildException
      */
-    public function appendChildToElement (\DomElement $element,\DomElement $child)
+    public function appendChildToElement (\DomElement $element, \DomElement $child)
     {
         try {
             return $element->appendChild($child);
         } catch (\Exception $e) {
-            throw new Exception\AppendChildException(sprintf("Error appending element: [%s] %s", get_class($e), $e->getMessage()));
+            throw new SoapException\AppendChildException(sprintf("Error appending element: [%s] %s", get_class($e), $e->getMessage()));
         }
     }
 
@@ -423,14 +428,14 @@ class Message
      * Returns the corresponding URI for the provided prefix.
      * 
      * @param string $prefix
-     * @throws Exception\InvalidNamespaceException
+     * @throws SoapException\InvalidNamespaceException
      * @return string
      */
     protected function _getNamespaceUri ($prefix)
     {
         $namespaces = $this->getRegisteredNamespaces();
         if (! isset($namespaces[$prefix])) {
-            throw new Exception\InvalidNamespaceException($prefix);
+            throw new SoapException\InvalidNamespaceException($prefix);
         }
         
         return $namespaces[$prefix];
