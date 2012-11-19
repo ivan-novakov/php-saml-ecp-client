@@ -12,7 +12,7 @@ interface ValidatorFactoryInterface
      * 
      * @return ValidatorInterface
      */
-    public function createSpInitialResponseValidator ();
+    public function createSpInitialResponseValidator (array $options = array());
 
 
     /**
@@ -20,5 +20,5 @@ interface ValidatorFactoryInterface
      * 
      * @return ValidatorInterface
      */
-    public function createIdpAuthnResponseValidator ();
+    public function createIdpAuthnResponseValidator (array $options = array());
 }

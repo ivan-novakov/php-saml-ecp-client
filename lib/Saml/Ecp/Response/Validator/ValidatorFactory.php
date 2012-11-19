@@ -12,8 +12,26 @@ use Saml\Ecp\Client\MimeType;
  */
 class ValidatorFactory implements ValidatorFactoryInterface
 {
-
+    
+    /*
+     * Options that may be passed to the constructor.
+     */
+    /**
+     * The path to the SOAP envelope spec.
+     * 
+     * @var string
+     */
     const OPT_SOAP_ENVELOPE_XSD = 'soap_envelope_xsd';
+    
+    /*
+     * Options that may be passed to a factory method.
+     */
+    /**
+     * The assertion consumer URL declared by the SP.
+     * 
+     * @var string
+     */
+    const CALLOPT_SP_ASSERTION_CONSUMER_URL = 'sp_assertion_consumer_url';
 
     /**
      * Options.
@@ -62,7 +80,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * (non-PHPdoc)
      * @see \Saml\Ecp\Response\Validator\ValidatorFactoryInterface::createSpInitialResponseValidator()
      */
-    public function createSpInitialResponseValidator ()
+    public function createSpInitialResponseValidator (array $options = array())
     {
         $chainValidator = new Chain();
         
@@ -85,7 +103,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * (non-PHPdoc)
      * @see \Saml\Ecp\Response\Validator\ValidatorFactoryInterface::createIdpAuthnResponseValidator()
      */
-    public function createIdpAuthnResponseValidator ()
+    public function createIdpAuthnResponseValidator (array $options = array())
     {
         $chainValidator = new Chain();
         
