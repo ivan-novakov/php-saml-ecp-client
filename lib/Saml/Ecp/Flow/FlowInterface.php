@@ -22,10 +22,11 @@ interface FlowInterface
     /**
      * Performs a full authentication flow.
      * 
+     * @param string $protectedContentUrl
      * @param Authentication\Method\MethodInterface $authenticationMethod
      * @param Discovery\Method\MethodInterface $discoveryMethod
      * @return ResponseInterface
      */
-    public function authenticate (Authentication\Method\MethodInterface $authenticationMethod, 
-        Discovery\Method\MethodInterface $discoveryMethod);
+    public function authenticate ($protectedContentUrl, Discovery\Method\MethodInterface $discoveryMethod, 
+        Authentication\Method\MethodInterface $authenticationMethod);
 }

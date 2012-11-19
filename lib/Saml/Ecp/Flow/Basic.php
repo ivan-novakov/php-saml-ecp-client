@@ -48,14 +48,14 @@ class Basic implements FlowInterface
      * (non-PHPdoc)
      * @see \Saml\Ecp\Flow\FlowInterface::authenticate()
      */
-    public function authenticate (Authentication\Method\MethodInterface $authenticationMethod, 
-        Discovery\Method\MethodInterface $discoveryMethod)
+    public function authenticate ($protectedContentUrl, Discovery\Method\MethodInterface $discoveryMethod, 
+        Authentication\Method\MethodInterface $authenticationMethod)
     {
         $client = $this->getClient();
         $requestFactory = $client->getRequestFactory();
         
         // send PAOS request to SP
-        $spInitialRequest = $requestFactory->createSpInitialRequest($client->getProtectedContentUri(true));
+        $spInitialRequest = $requestFactory->createSpInitialRequest($protectedContentUrl);
         $spInitialResponse = $client->sendInitialRequestToSp($spInitialRequest);
         
         // send authn request to IdP
@@ -67,7 +67,7 @@ class Basic implements FlowInterface
         $spConveyResponse = $client->sendAuthnResponseToSp($spConveyRequest);
         
         // access protected resource
-        $spResourceRequest = $requestFactory->createSpResourceRequest($client->getProtectedContentUri());
+        $spResourceRequest = $requestFactory->createSpResourceRequest($protectedContentUrl);
         $spResourceResponse = $client->sendResourceRequestToSp($spResourceRequest);
         
         return $spResourceResponse;

@@ -63,23 +63,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetProtectedContentUriThrowsException ()
-    {
-        $this->setExpectedException('Saml\Ecp\Exception\MissingOptionException');
-        $this->_client->getProtectedContentUri(true);
-    }
-
-
-    public function testGetProtectedContentUriAfterBeingSet ()
-    {
-        $uri = 'http://test/';
-        $this->_client->setOptions(array(
-            Client::OPT_PROTECTED_CONTENT_URI => $uri
-        ));
-        $this->assertSame($uri, $this->_client->getProtectedContentUri());
-    }
-
-
     public function testGetRequestFactoryImplicit ()
     {
         $this->assertInstanceOf('Saml\Ecp\Request\RequestFactoryInterface', $this->_client->getRequestFactory());

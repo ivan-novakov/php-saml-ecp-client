@@ -29,8 +29,6 @@ use Zend\Log;
 class Client implements Log\LoggerAwareInterface
 {
 
-    const OPT_PROTECTED_CONTENT_URI = 'protected_content_uri';
-
     const OPT_HTTP_CLIENT = 'http_client';
 
     const OPT_SOAP_ENVELOPE_XSD = 'soap_envelope_xsd';
@@ -146,24 +144,6 @@ class Client implements Log\LoggerAwareInterface
             throw new GeneralException\MissingDependencyException('logger');
         }
         return $this->_logger;
-    }
-
-
-    /**
-     * Returns the target URI protected by the SP.
-     * 
-     * @param boolean $throwException
-     * @throws GeneralException\MissingConfigException
-     * @return string
-     */
-    public function getProtectedContentUri ($throwException = false)
-    {
-        $uri = (string) $this->_options->get(self::OPT_PROTECTED_CONTENT_URI);
-        if (! $uri && $throwException) {
-            throw new GeneralException\MissingOptionException(self::OPT_PROTECTED_CONTENT_URI);
-        }
-        
-        return $uri;
     }
 
 
