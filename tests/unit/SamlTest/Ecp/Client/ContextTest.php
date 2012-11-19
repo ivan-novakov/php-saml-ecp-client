@@ -20,10 +20,10 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetSpAssertionConsumerUrl ()
+    public function testGetSpAuthnRequest ()
     {
-        $url = 'https://some.url/';
-        $this->_context->setSpAssertionConsumerUrl($url);
-        $this->assertSame($url, $this->_context->getSpAssertionConsumerUrl());
+        $request = $this->getMock('Saml\Ecp\Request\RequestInterface');
+        $this->_context->setSpAuthnRequest($request);
+        $this->assertSame($request, $this->_context->getSpAuthnRequest());
     }
 }

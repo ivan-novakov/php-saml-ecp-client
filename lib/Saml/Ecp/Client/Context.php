@@ -2,33 +2,24 @@
 
 namespace Saml\Ecp\Client;
 
+use Saml\Ecp\Request\RequestInterface;
 use Saml\Ecp\Util\Options;
 
 
 class Context extends Options
 {
 
-    const VAR_SP_ASSERTION_CONSUMER_URL = 'sp_assertion_consumer_url';
+    const VAR_SP_AUTHN_REQUEST = 'sp_authn_request';
 
 
-    /**
-     * Sets the SP's assertion consumer URL.
-     * 
-     * @param string $url
-     */
-    public function setSpAssertionConsumerUrl ($url)
+    public function setSpAuthnRequest (RequestInterface $request)
     {
-        $this->set(self::VAR_SP_ASSERTION_CONSUMER_URL, $url);
+        $this->set(self::VAR_SP_AUTHN_REQUEST, $request);
     }
 
 
-    /**
-     * Returns the SP's assertion consumer URL.
-     * 
-     * @return string|null
-     */
-    public function getSpAssertionConsumerUrl ()
+    public function getSpAuthnRequest ()
     {
-        return $this->get(self::VAR_SP_ASSERTION_CONSUMER_URL);
+        return $this->get(self::VAR_SP_AUTHN_REQUEST);
     }
 }
