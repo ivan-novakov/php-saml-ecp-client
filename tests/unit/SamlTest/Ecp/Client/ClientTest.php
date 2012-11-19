@@ -41,6 +41,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testGetContextImplicit ()
+    {
+        $this->assertInstanceOf('Saml\Ecp\Client\Context', $this->_client->getContext());
+    }
+
+
+    public function testGetContextAfterBeingSet ()
+    {
+        $context = $this->_getContextMock();
+        $this->_client->setContext($context);
+        $this->assertSame($context, $this->_client->getContext());
+    }
+
+
     public function testGetHttpClientWhichIsNotSet ()
     {
         $this->assertInstanceOf('Zend\Http\Client', $this->_client->getHttpClient());
@@ -113,6 +127,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         
         $request = $this->_getRequestMock($httpRequest);
         $response = $this->_getResponseMock();
+        
+        $context = $this->_getContextMock();
+        $context->expects($this->once())
+            ->method('setSpInitialResponse')
+            ->with($response);
+        $this->_client->setContext($context);
         
         $httpClient = $this->_getHttpClientMock($httpRequest, $httpResponse);
         $this->_client->setHttpClient($httpClient);
@@ -231,6 +251,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /*
      * ------------------------------------------------------------------------------------------------------------
      */
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function _getResponseFactoryMock ($factoryCall, $httpResponse, $response)
     {
         $responseFactory = $this->getMock('Saml\Ecp\Response\ResponseFactory');
@@ -243,6 +266,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function _getResponseValidatorFactoryMock ($factoryCall, $validator)
     {
         $responseValidatorFactory = $this->getMock('Saml\Ecp\Response\Validator\ValidatorFactoryInterface');
@@ -271,6 +297,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function _getRequestMock ($httpRequest)
     {
         $request = $this->getMock('Saml\Ecp\Request\RequestInterface');
@@ -282,9 +311,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function _getResponseMock ()
     {
         return $this->getMock('Saml\Ecp\Response\ResponseInterface');
+    }
+
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function _getContextMock ()
+    {
+        return $this->getMock('Saml\Ecp\Client\Context');
     }
 
 
@@ -303,12 +344,18 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function _getHttpRequestMock ()
     {
         return $this->getMock('Zend\Http\Request');
     }
 
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function _getHttpResponseMock ()
     {
         return $this->getMock('Zend\Http\Response');

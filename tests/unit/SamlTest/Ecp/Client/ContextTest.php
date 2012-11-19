@@ -22,8 +22,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSpAuthnRequest ()
     {
-        $request = $this->getMock('Saml\Ecp\Request\RequestInterface');
-        $this->_context->setSpAuthnRequest($request);
-        $this->assertSame($request, $this->_context->getSpAuthnRequest());
+        $request = $this->getMock('Saml\Ecp\Response\ResponseInterface');
+        $this->_context->setSpInitialResponse($request);
+        $this->assertSame($request, $this->_context->getSpInitialResponse());
     }
 }

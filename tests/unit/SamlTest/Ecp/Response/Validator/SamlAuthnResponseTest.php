@@ -20,19 +20,46 @@ class SamlAuthnResponseTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testIsValidTrue ()
+    public function testIsValidNoSpServiceUrlSet ()
     {
-        $response = $this->_getResponseMock('http://some.url.org/');
+        $this->setExpectedException('Saml\Ecp\Exception\MissingOptionException');
+        $response = $this->_getResponseMock('https://some.url/');
         
-        $this->assertTrue($this->_validator->isValid($response));
+        $this->_validator->isValid($response);
     }
 
 
-    public function testisValidNoServiceUrl ()
+    public function testIsValidNoServiceUrlInResponse ()
     {
+        $this->_validator->setOptions(array(
+            SamlAuthnResponse::OPT_SP_ASSERTION_CONSUMER_URL => 'https://some.url'
+        ));
         $response = $this->_getResponseMock(null);
         
         $this->assertFalse($this->_validator->isValid($response));
+    }
+
+
+    public function testIsValidDifferentUrl ()
+    {
+        $this->_validator->setOptions(array(
+            SamlAuthnResponse::OPT_SP_ASSERTION_CONSUMER_URL => 'https://some.url'
+        ));
+        $response = $this->_getResponseMock('https://different.url');
+        
+        $this->assertFalse($this->_validator->isValid($response));
+    }
+
+
+    public function testIsValidSameUrl ()
+    {
+        $url = 'https://some.url';
+        $this->_validator->setOptions(array(
+            SamlAuthnResponse::OPT_SP_ASSERTION_CONSUMER_URL => $url
+        ));
+        $response = $this->_getResponseMock($url);
+        
+        $this->assertTrue($this->_validator->isValid($response));
     }
 
 
@@ -41,7 +68,7 @@ class SamlAuthnResponseTest extends \PHPUnit_Framework_TestCase
         $soapMessage = $this->getMockBuilder('Saml\Ecp\Soap\Message\AuthnResponse')
             ->disableOriginalConstructor()
             ->getMock();
-        $soapMessage->expects($this->once())
+        $soapMessage->expects($this->any())
             ->method('getAssertionConsumerServiceUrl')
             ->will($this->returnValue($consumerUrl));
         

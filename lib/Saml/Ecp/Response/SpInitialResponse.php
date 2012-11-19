@@ -15,23 +15,6 @@ class SpInitialResponse extends AbstractResponse
 
 
     /**
-     * Returns the URL of the endpoint, where the response has to be delivered.
-     * 
-     * @return string
-     */
-    public function getResponseConsumerUrl ()
-    {
-        $consumerUrl = $this->getSoapMessage()
-            ->getAssertionConsumerServiceUrl();
-        if (! $consumerUrl) {
-            throw new Exception\InvalidResponseException('Missing AssertionConsumerServiceUrl');
-        }
-        
-        return $consumerUrl;
-    }
-
-
-    /**
      * (non-PHPdoc)
      * @see \Saml\Ecp\Response\AbstractResponse::_createSoapMessage()
      * @return AuthnRequest

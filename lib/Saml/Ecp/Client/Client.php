@@ -2,6 +2,7 @@
 
 namespace Saml\Ecp\Client;
 
+use Saml\Ecp\Response\Validator\ValidatorFactory;
 use Saml\Ecp\Response;
 use Saml\Ecp\Request;
 use Saml\Ecp\Exception as GeneralException;
@@ -67,6 +68,13 @@ class Client implements Log\LoggerAwareInterface
      * @var Log\LoggerInterface
      */
     protected $_logger = null;
+
+    /**
+     * The client context object.
+     * 
+     * @var Context
+     */
+    protected $_context = null;
 
     /**
      * Options.
@@ -144,6 +152,31 @@ class Client implements Log\LoggerAwareInterface
             throw new GeneralException\MissingDependencyException('logger');
         }
         return $this->_logger;
+    }
+
+
+    /**
+     * Sets the client context.
+     * 
+     * @param Context $context
+     */
+    public function setContext (Context $context)
+    {
+        $this->_context = $context;
+    }
+
+
+    /**
+     * Returns the client context.
+     * 
+     * @return Context
+     */
+    public function getContext ()
+    {
+        if (! ($this->_context instanceof Context)) {
+            $this->_context = new Context();
+        }
+        return $this->_context;
     }
 
 
@@ -247,6 +280,7 @@ class Client implements Log\LoggerAwareInterface
             $this->_responseValidatorFactory = new Response\Validator\ValidatorFactory(array(
                 Response\Validator\ValidatorFactory::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD)
             ));
+            $this->_responseValidatorFactory->setClientContext($this->getContext());
         }
         
         return $this->_responseValidatorFactory;
@@ -277,7 +311,6 @@ class Client implements Log\LoggerAwareInterface
     {
         $this->info($request);
         
-        /* @var $request \Saml\Ecp\Request\SpInitialRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         $response = $this->getResponseFactory()
@@ -286,6 +319,9 @@ class Client implements Log\LoggerAwareInterface
             ->createSpInitialResponseValidator();
         
         $this->validateResponse($validator, $response, 'initial SP response');
+        
+        $this->getContext()
+            ->setSpInitialResponse($response);
         
         $this->info($response);
         return $response;
@@ -306,7 +342,6 @@ class Client implements Log\LoggerAwareInterface
     {
         $this->info($request);
         
-        /* @var $request \Saml\Ecp\Request\IdpAuthnRequest */
         $client = $this->getHttpClient();
         $authenticationMethod->configureHttpClient($client);
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
@@ -334,7 +369,6 @@ class Client implements Log\LoggerAwareInterface
     {
         $this->info($request);
         
-        /* @var $request \Saml\Ecp\Request\SpConveyAuthnRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         $response = $this->getResponseFactory()
@@ -355,7 +389,6 @@ class Client implements Log\LoggerAwareInterface
     {
         $this->info($request);
         
-        /* @var $request \Saml\Ecp\Request\SpResourceRequest */
         $httpResponse = $this->_sendHttpRequest($request->getHttpRequest());
         
         $response = $this->getResponseFactory()
