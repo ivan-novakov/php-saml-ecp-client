@@ -16,20 +16,14 @@ $globalConfig = new \Zend\Config\Config(array(
     ), 
     
     'client' => array(
-        'protected_content_uri' => 'https://sp.example.org/devel/secure/',
         'soap_envelope_xsd' => __DIR__ . '/../schema/soap11-envelope.xsd', 
         
         'http_client' => array(
             'options' => array(
-                'maxredirects' => 0, 
-                'strictredirects' => true, 
-                'useragent' => 'PHP SAML ECP Client'
+                'cafile' => '/etc/ssl/certs/ca-bundle.pem'
             ), 
-            'context' => array(
-                'ssl' => array(
-                    'cafile' => '/etc/ssl/certs/ca-bundle.pem'
-                )
-            )
+            'zend_client_options' => array(), 
+            'curl_adapter_options' => array()
         )
     ),
          

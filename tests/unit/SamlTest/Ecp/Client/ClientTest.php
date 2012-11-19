@@ -57,6 +57,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testGetHttpClientWhichIsNotSet ()
     {
+        $this->setExpectedException('Saml\Ecp\Exception\MissingConfigException');
         $this->assertInstanceOf('Zend\Http\Client', $this->_client->getHttpClient());
     }
 
@@ -65,6 +66,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Saml\Ecp\Exception\MissingDependencyException');
         $this->_client->getHttpClient(true);
+    }
+
+
+    public function testGetHttpClientFromConfig ()
+    {
+        $this->_client->setOptions(array(
+            Client::OPT_HTTP_CLIENT => array(
+                'options' => array(
+                    'cafile' => 'dummy'
+                )
+            )
+        ));
+        
+        $this->assertInstanceOf('Zend\Http\Client', $this->_client->getHttpClient());
     }
 
 

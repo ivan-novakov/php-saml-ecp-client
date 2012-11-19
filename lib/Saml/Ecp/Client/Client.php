@@ -195,10 +195,11 @@ class Client implements Log\LoggerAwareInterface
                 throw new GeneralException\MissingDependencyException('http client');
             }
             
-            $httpClientConfig = $this->_options->get(self::OPT_HTTP_CLIENT);
-            if (! $httpClientConfig || ! is_array($httpClientConfig)) {
-                $httpClientConfig = array();
+            $httpClientConfig = $this->getOption(self::OPT_HTTP_CLIENT);
+            if (! is_array($httpClientConfig)) {
+                throw new GeneralException\MissingConfigException('http_client');
             }
+            
             $this->_httpClient = $this->_createHttpClient($httpClientConfig);
         }
         
@@ -488,16 +489,8 @@ class Client implements Log\LoggerAwareInterface
      */
     protected function _createHttpClient (array $config)
     {
-        $adapter = new Http\Client\Adapter\Socket();
-        $client = new Http\Client();
-        if (isset($config['options']) && is_array($config['options'])) {
-            $client->setOptions($config['options']);
-        }
-        $client->setAdapter($adapter);
-        
-        if (isset($config['context']) && is_array($config['context'])) {
-            $adapter->setStreamContext($config['context']);
-        }
+        $httpClientFactory = new HttpClientFactory();
+        $client = $httpClientFactory->createHttpClient($config);
         
         return $client;
     }
