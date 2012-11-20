@@ -92,20 +92,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetRequestFactoryImplicit ()
-    {
-        $this->assertInstanceOf('Saml\Ecp\Request\RequestFactoryInterface', $this->_client->getRequestFactory());
-    }
-
-
-    public function testGetRequestFactoryAfterBeingSet ()
-    {
-        $requestFactory = $this->getMock('Saml\Ecp\Request\RequestFactoryInterface');
-        $this->_client->setRequestFactory($requestFactory);
-        $this->assertSame($requestFactory, $this->_client->getRequestFactory());
-    }
-
-
     public function testGetResponseFactoryImplicit ()
     {
         $this->assertInstanceOf('Saml\Ecp\Response\ResponseFactoryInterface', $this->_client->getResponseFactory());

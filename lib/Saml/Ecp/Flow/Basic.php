@@ -6,6 +6,7 @@ use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Client\Client;
 use Saml\Ecp\Authentication;
 use Saml\Ecp\Discovery;
+use Saml\Ecp\Request;
 
 
 class Basic implements FlowInterface
@@ -17,6 +18,13 @@ class Basic implements FlowInterface
      * @var Client
      */
     protected $_client = null;
+
+    /**
+     * The request factory object.
+     *
+     * @var Request\RequestFactoryInterface
+     */
+    protected $_requestFactory = null;
 
 
     /**
@@ -45,6 +53,32 @@ class Basic implements FlowInterface
 
 
     /**
+     * Returns the request factory object.
+     *
+     * @return Request\RequestFactoryInterface
+     */
+    public function getRequestFactory ()
+    {
+        if (! ($this->_requestFactory instanceof Request\RequestFactoryInterface)) {
+            $this->_requestFactory = new Request\RequestFactory();
+        }
+        
+        return $this->_requestFactory;
+    }
+
+
+    /**
+     * Sets the request factory object.
+     *
+     * @param Request\RequestFactoryInterface $requestFactory
+     */
+    public function setRequestFactory (Request\RequestFactoryInterface $requestFactory)
+    {
+        $this->_requestFactory = $requestFactory;
+    }
+
+
+    /**
      * (non-PHPdoc)
      * @see \Saml\Ecp\Flow\FlowInterface::authenticate()
      */
@@ -52,7 +86,7 @@ class Basic implements FlowInterface
         Authentication\Method\MethodInterface $authenticationMethod)
     {
         $client = $this->getClient();
-        $requestFactory = $client->getRequestFactory();
+        $requestFactory = $this->getRequestFactory();
         
         // send PAOS request to SP
         $spInitialRequest = $requestFactory->createSpInitialRequest($protectedContentUrl);

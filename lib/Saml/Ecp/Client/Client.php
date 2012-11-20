@@ -42,13 +42,6 @@ class Client implements Log\LoggerAwareInterface
     protected $_httpClient = null;
 
     /**
-     * The request factory object.
-     * 
-     * @var Request\RequestFactoryInterface
-     */
-    protected $_requestFactory = null;
-
-    /**
      * The response factory object.
      * 
      * @var Response\ResponseFactoryInterface
@@ -215,32 +208,6 @@ class Client implements Log\LoggerAwareInterface
     public function setHttpClient (Http\Client $httpClient)
     {
         $this->_httpClient = $httpClient;
-    }
-
-
-    /**
-     * Returns the request factory object.
-     * 
-     * @return Request\RequestFactoryInterface
-     */
-    public function getRequestFactory ()
-    {
-        if (! ($this->_requestFactory instanceof Request\RequestFactoryInterface)) {
-            $this->_requestFactory = new Request\RequestFactory();
-        }
-        
-        return $this->_requestFactory;
-    }
-
-
-    /**
-     * Sets the request factory object.
-     * 
-     * @param Request\RequestFactoryInterface $requestFactory
-     */
-    public function setRequestFactory (Request\RequestFactoryInterface $requestFactory)
-    {
-        $this->_requestFactory = $requestFactory;
     }
 
 

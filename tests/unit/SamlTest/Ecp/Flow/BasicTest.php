@@ -80,6 +80,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             ->method('createSpResourceRequest')
             ->with($protectedContentUri)
             ->will($this->returnValue($spResourceRequest));
+        $this->_flow->setRequestFactory($requestFactory);
         
         $client = $this->_getClientMock();
         $client->expects($this->once())
@@ -98,9 +99,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             ->method('sendResourceRequestToSp')
             ->with($spResourceRequest)
             ->will($this->returnValue($spResourceResponse));
-        $client->expects($this->once())
-            ->method('getRequestFactory')
-            ->will($this->returnValue($requestFactory));
         
         $this->_flow->setClient($client);
         $this->assertSame($spResourceResponse, $this->_flow->authenticate($protectedContentUri, $discoveryMethod, $authenticationMethod));
