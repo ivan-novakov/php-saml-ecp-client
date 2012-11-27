@@ -11,8 +11,7 @@
 
     "require" : {
         "php" : ">=5.3.3",
-        "zendframework/zend-http" : "2.0.*",
-        "zendframework/zend-stdlib" : "2.0.*"
+        "zendframework/zendframework" : "2.*"
     },
 
     "autoload" : {
