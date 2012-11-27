@@ -35,11 +35,31 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->_validator->isValid($this->_getResponseMock('application/test')));
     }
-    
-    
-    public function testIsValidFalse()
+
+
+    public function testIsValidFalse ()
     {
         $this->assertFalse($this->_validator->isValid($this->_getResponseMock('application/different')));
+    }
+
+
+    public function testIsValidTrueWithPartialComparison ()
+    {
+        $this->_validator->setOptions(array(
+            ContentType::OPT_EXPECTED_CONTENT_TYPE => 'application/test', 
+            ContentType::OPT_PARTIAL => true
+        ));
+        
+        $this->assertTrue($this->_validator->isValid($this->_getResponseMock('application/test;muahaha')));
+    }
+    
+    public function testIsValidFalseWithoutPartialComparison ()
+    {
+        $this->_validator->setOptions(array(
+            ContentType::OPT_EXPECTED_CONTENT_TYPE => 'application/test'
+        ));
+    
+        $this->assertFalse($this->_validator->isValid($this->_getResponseMock('application/test;muahaha')));
     }
 
 

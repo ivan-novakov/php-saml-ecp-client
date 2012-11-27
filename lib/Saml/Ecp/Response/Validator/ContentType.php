@@ -11,6 +11,8 @@ class ContentType extends AbstractValidator
 
     const OPT_EXPECTED_CONTENT_TYPE = 'expected_content_type';
 
+    const OPT_PARTIAL = 'partial';
+
 
     /**
      * (non-PHPdoc)
@@ -18,6 +20,7 @@ class ContentType extends AbstractValidator
      */
     public function isValid (ResponseInterface $response)
     {
+        $partial = $this->getOption(self::OPT_PARTIAL);
         $expectedContentType = $this->getOption(self::OPT_EXPECTED_CONTENT_TYPE);
         if (null === $expectedContentType) {
             throw new GeneralException\MissingOptionException(self::OPT_EXPECTED_CONTENT_TYPE);
@@ -28,9 +31,17 @@ class ContentType extends AbstractValidator
             ->get('Content-Type')
             ->getFieldValue();
         
-        if ($contentType != $expectedContentType) {
-            $this->addMessage(sprintf("Content type '%s' is different from the expected '%s'", $contentType, $expectedContentType));
-            return false;
+        if ($partial) {
+            $parts = explode(';', $contentType);
+            if ($parts[0] != $expectedContentType) {
+                $this->addMessage(sprintf("Content type '%s' is different from the expected '%s' (partial comparison)", $contentType, $expectedContentType));
+                return false;
+            }
+        } else {
+            if ($contentType != $expectedContentType) {
+                $this->addMessage(sprintf("Content type '%s' is different from the expected '%s'", $contentType, $expectedContentType));
+                return false;
+            }
         }
         
         return true;
