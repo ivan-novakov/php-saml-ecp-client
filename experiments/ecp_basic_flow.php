@@ -27,4 +27,9 @@ $client->setLogger($logger);
 
 $flow = new Flow\Basic();
 $flow->setClient($client);
-$response = $flow->authenticate($globalConfig->get('protected_content_uri'), $discoveryMethod, $authenticationMethod);
+
+try {
+    $response = $flow->authenticate($globalConfig->get('protected_content_uri'), $discoveryMethod, $authenticationMethod);
+} catch (\Exception $e) {
+    _dump("$e");
+}

@@ -3,7 +3,6 @@
 namespace Saml\Ecp\Response\Validator;
 
 use Saml\Ecp\Response\ResponseInterface;
-
 use Saml\Ecp\Soap\Message\AuthnRequest;
 use Saml\Ecp\Request\RequestInterface;
 use Saml\Ecp\Client\Context;
@@ -132,6 +131,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
         $chainValidator->addValidator(new SoapEnvelope(array(
             SoapEnvelope::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD)
         )));
+        $chainValidator->addValidator(new SoapResponse());
         $chainValidator->addValidator(new SoapHeaderActor());
         $chainValidator->addValidator(new SamlAuthnRequest());
         $chainValidator->addValidator(new PaosRequest());
@@ -148,6 +148,18 @@ class ValidatorFactory implements ValidatorFactoryInterface
     {
         $chainValidator = new Chain();
         
+        /*
+        $chainValidator->addValidator(new ContentType(array(
+            ContentType::OPT_EXPECTED_CONTENT_TYPE => MimeType::SOAP, 
+            ContentType::OPT_PARTIAL => true
+        )));
+        */
+        
+        $chainValidator->addValidator(new SoapEnvelope(array(
+            SoapEnvelope::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD)
+        )));
+        
+        $chainValidator->addValidator(new SoapResponse());
         $chainValidator->addValidator(new HttpStatus());
         $chainValidator->addValidator(new SamlAuthnResponse(array(
             SamlAuthnResponse::OPT_SP_ASSERTION_CONSUMER_URL => $this->_getSpAssertionConsumerServiceUrl()
