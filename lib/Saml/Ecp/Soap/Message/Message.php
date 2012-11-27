@@ -114,6 +114,55 @@ class Message
 
 
     /**
+     * Returns true, if the SOAP message is a fault message (contains a Fault element in its body).
+     * 
+     * @return boolean
+     */
+    public function isFault ()
+    {
+        $node = $this->getNodeByXpath('/S:Envelope/S:Body/S:Fault');
+        if ($node) {
+            return true;
+        }
+        
+        return false;
+    }
+
+
+    /**
+     * Returns the "faultcode" element of the SOAP fault message.
+     * 
+     * @return string|null
+     */
+    public function getFaultCode ()
+    {
+        return $this->getNodeValueByXpath('/S:Envelope/S:Body/S:Fault/faultcode');
+    }
+
+
+    /**
+     * Returns the "faultstring" element of the SOAP fault message.
+     * 
+     * @return string|null
+     */
+    public function getFaultString ()
+    {
+        return $this->getNodeValueByXpath('/S:Envelope/S:Body/S:Fault/faultstring');
+    }
+
+
+    /**
+     * Returns the "detail" element of the SOAP fault message.
+     * 
+     * @return string|null
+     */
+    public function getFaultDetail ()
+    {
+        return $this->getNodeValueByXpath('/S:Envelope/S:Body/S:Fault/detail');
+    }
+
+
+    /**
      * Sets the DOM representation of the SOAP message.
      * 
      * @param \DomDocument $dom
@@ -279,7 +328,7 @@ class Message
      * @param \DomElement $child
      * @throws SoapException\AppendChildException
      */
-    public function appendChildToElement (\DomElement $element, \DomElement $child)
+    public function appendChildToElement (\DomElement $element,\DomElement $child)
     {
         try {
             return $element->appendChild($child);

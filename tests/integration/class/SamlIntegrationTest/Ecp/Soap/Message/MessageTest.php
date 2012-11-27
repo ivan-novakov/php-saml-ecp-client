@@ -36,6 +36,41 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testIsFaultWithFaultMessage ()
+    {
+        $this->_message->fromString($this->_getFaultSoapData());
+        $this->assertTrue($this->_message->isFault());
+    }
+
+
+    public function testIsFaultWithNormalMessage ()
+    {
+        $this->_message->fromString($this->_getSoapData());
+        $this->assertFalse($this->_message->isFault());
+    }
+
+
+    public function testGetFaultCode ()
+    {
+        $this->_message->fromString($this->_getFaultSoapData());
+        $this->assertSame('007', $this->_message->getFaultCode());
+    }
+
+
+    public function testGetFaultString ()
+    {
+        $this->_message->fromString($this->_getFaultSoapData());
+        $this->assertSame('An error occurred', $this->_message->getFaultString());
+    }
+
+
+    public function testGetFaultDetail ()
+    {
+        $this->_message->fromString($this->_getFaultSoapData());
+        $this->assertSame('Some detail', $this->_message->getFaultDetail());
+    }
+
+
     public function testGetBody ()
     {
         $body = $this->_message->getBody();
@@ -140,5 +175,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     protected function _getSoapData ()
     {
         return file_get_contents(TESTS_FILES_DIR . 'soap/soap-saml-authn-request.xml');
+    }
+
+
+    protected function _getFaultSoapData ()
+    {
+        return file_get_contents(TESTS_FILES_DIR . 'soap/soap-fault.xml');
     }
 }
