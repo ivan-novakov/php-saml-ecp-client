@@ -386,7 +386,7 @@ class Client implements Log\LoggerAwareInterface
         try {
             $valid = $validator->isValid($response);
         } catch (\Exception $e) {
-            throw new Exception\ResponseValidationException(sprintf("Exception during %s validation: [%s] %s", $responseLabel, get_class($e), $e->getMessage()));
+            throw new Exception\ResponseValidationException($response, $validator, $e);
         }
         
         if (! $valid) {
