@@ -390,7 +390,7 @@ class Client implements Log\LoggerAwareInterface
         }
         
         if (! $valid) {
-            throw new Exception\InvalidResponseException(sprintf("Invalid %s: %s", $responseLabel, implode(', ', $validator->getMessages())));
+            throw new Exception\InvalidResponseException($response, $validator->getMessages());
         }
         
         return $valid;

@@ -1,5 +1,7 @@
 <?php
 
+use Saml\Ecp\Client\Exception\InvalidResponseException;
+
 use Saml\Ecp\Flow;
 use Saml\Ecp\Client\Client;
 use Saml\Ecp\Discovery\Method\StaticIdp;
@@ -30,6 +32,10 @@ $flow->setClient($client);
 
 try {
     $response = $flow->authenticate($globalConfig->get('protected_content_uri'), $discoveryMethod, $authenticationMethod);
+} catch (InvalidResponseException $e) {
+    _dump('Invalid response:');
+    _dump("$e");
 } catch (\Exception $e) {
+    _dump('General exception:');
     _dump("$e");
 }
