@@ -149,7 +149,7 @@ Response validation is achieved through validators created by the _Saml\Ecp\Resp
 
 ## Links
 
-* [API docs]()
+* [API docs](http://debug.cz/apidocs/ecp/)
 
 ## Specifications
 
