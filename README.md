@@ -43,7 +43,7 @@ This library tries to follow the ECP profile specification. Currently, it doesn'
 
 The Client object is responsible for the actual work - sending requests and validating responses. The Flow object uses the client object to issue requests in the apropriate order. The authenticate() method performs the whole ECP flow, when the client tries to access the protected resource and then it is redirected to the IdP for authentication. Besides the resource URL, the authenticate() method needs a discovery method object, which determines the IdP to use for authentication and an authentication method object, which adjusts the authentication request.
 
-In this case the discovery method (_StaticIdP_) just returns the IdP endpoint. The authentication method (_BasicAuth_) adjusts the request to perform a HTTP Basic authentication based on the provided credentials.
+In this case the discovery method ( _StaticIdP_ ) just returns the IdP endpoint. The authentication method ( _BasicAuth_ ) adjusts the request to perform a HTTP Basic authentication based on the provided credentials.
 
 ## Shibboleth SP configuration
 
@@ -80,7 +80,7 @@ This library is more a framework than a ready to use application. There are nume
 
 ### The HTTP client
 
-The _Saml\Ecp\Client\Client_ object uses internally the _Zend\Http\Client_ object with the cURL adapter (_Zend\Http\Client\Adapter\Curl_). For security reasons the peer and host validation is on by default (`CURLOPT_SSL_VERIFYPEER = true`, `CURLOPT_SSL_VERIFYHOST = 2`). You have to pass one of the following options:
+The _Saml\Ecp\Client\Client_ object uses internally the _Zend\Http\Client_ object with the cURL adapter ( _Zend\Http\Client\Adapter\Curl_ ). For security reasons the peer and host validation is on by default (`CURLOPT_SSL_VERIFYPEER = true`, `CURLOPT_SSL_VERIFYHOST = 2`). You have to pass one of the following options:
 
 * **cafile** - path to the file containing CA certificates used for peer/host validation
 * **capath** - path the the directory contiaining CA certificates used for peer/host validation
@@ -137,11 +137,11 @@ If you need to implement alternative request objects, you can extend the _Saml\E
 
 ### Responses
 
-Similar to the requests, you can write your own by extending the abstract response class (_Saml\Ecp\Response\AbstractResponse_) or by implementing the response interface (_Saml\Ecp\Response\ResponseInterface_). Additionaly you need to write an alternative response factory implementing the _Saml\Ecp\Response\ResponseFactoryInterface_.
+Similar to the requests, you can write your own by extending the abstract response class ( _Saml\Ecp\Response\AbstractResponse_ ) or by implementing the response interface ( _Saml\Ecp\Response\ResponseInterface_ ). Additionaly you need to write an alternative response factory implementing the _Saml\Ecp\Response\ResponseFactoryInterface_.
 
 ### Response validation
 
-Response validation is achieved through validators created by the _Saml\Ecp\Response\Validator\ValidatorFactory_. The validators must implement the _Saml\Ecp\Response\Validator\ValidatorInterface_ and the validator factory must implement the _Saml\Ecp\Response\Validator\ValidatorFactoryInterface_. The validator factory has to be injected into the client object (_Saml\Ecp\Client\Client_).
+Response validation is achieved through validators created by the _Saml\Ecp\Response\Validator\ValidatorFactory_. The validators must implement the _Saml\Ecp\Response\Validator\ValidatorInterface_ and the validator factory must implement the _Saml\Ecp\Response\Validator\ValidatorFactoryInterface_. The validator factory has to be injected into the client object ( _Saml\Ecp\Client\Client_ ).
 
 ## Licence
 
