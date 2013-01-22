@@ -3,6 +3,12 @@
 namespace Saml\Ecp\Soap;
 
 
+/**
+ * The class contains all "registered" namespaces used in SOAP messages.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class Namespaces
 {
 
@@ -15,7 +21,7 @@ class Namespaces
     );
 
 
-    static public function getAll ()
+    static public function getAll()
     {
         return self::$_namespaces;
     }

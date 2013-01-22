@@ -7,6 +7,12 @@ use Saml\Ecp\Util\Options;
 use Zend\Http;
 
 
+/**
+ * Abstract response class.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 abstract class AbstractResponse implements ResponseInterface
 {
 
@@ -37,7 +43,7 @@ abstract class AbstractResponse implements ResponseInterface
      *
      * @param array|\Traversable $options
      */
-    public function __construct (Http\Response $httpResponse, $options = array())
+    public function __construct(Http\Response $httpResponse, $options = array())
     {
         $this->setOptions($options);
         $this->setHttpResponse($httpResponse);
@@ -49,17 +55,17 @@ abstract class AbstractResponse implements ResponseInterface
      * 
      * @param array|\Traversable $options
      */
-    public function setOptions ($options)
+    public function setOptions($options)
     {
         $this->_options = new Options($options);
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\ResponseInterface::setHttpResponse()
      */
-    public function setHttpResponse (Http\Response $httpResponse)
+    public function setHttpResponse(Http\Response $httpResponse)
     {
         $this->_httpResponse = $httpResponse;
     }
@@ -70,37 +76,32 @@ abstract class AbstractResponse implements ResponseInterface
      * 
      * @return Http\Response
      */
-    public function getHttpResponse ()
+    public function getHttpResponse()
     {
         return $this->_httpResponse;
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\ResponseInterface::getContent()
      */
-    public function getContent ()
+    public function getContent()
     {
         return $this->getHttpResponse()
             ->getBody();
     }
-
-
-    /**
-     * (non-PHPdoc)
-     * @see \Saml\Ecp\Response\ResponseInterface::validate()
-     */
+    
+    /*
     public function validate (array $validateOptions = array())
     {}
-
-
+    */
+    
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Soap\Container\ContainerInterface::getSoapMessage()
-     * @return Message
      */
-    public function getSoapMessage ()
+    public function getSoapMessage()
     {
         if (! ($this->_soapMessage instanceof Message)) {
             $this->_soapMessage = $this->_createSoapMessage($this->getContent());
@@ -111,10 +112,10 @@ abstract class AbstractResponse implements ResponseInterface
 
 
     /**
-     * \(non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Soap\Container\ContainerInterface::setSoapMessage()
      */
-    public function setSoapMessage (Message $soapMessage)
+    public function setSoapMessage(Message $soapMessage)
     {
         $this->_soapMessage = $soapMessage;
     }
@@ -125,14 +126,19 @@ abstract class AbstractResponse implements ResponseInterface
      *
      * @return string
      */
-    public function __toString ()
+    public function __toString()
     {
         return sprintf("%s: [%d]", $this->_getResponseName(), $this->getHttpResponse()
             ->getStatusCode());
     }
 
 
-    protected function _getResponseName ()
+    /**
+     * Returns a "readable" response class name.
+     * 
+     * @return string
+     */
+    protected function _getResponseName()
     {
         $className = get_class($this);
         return substr($className, strrpos($className, '\\') + 1);
@@ -145,7 +151,7 @@ abstract class AbstractResponse implements ResponseInterface
      * @param string $content
      * @return Message
      */
-    protected function _createSoapMessage ($content)
+    protected function _createSoapMessage($content)
     {
         return new Message($content);
     }

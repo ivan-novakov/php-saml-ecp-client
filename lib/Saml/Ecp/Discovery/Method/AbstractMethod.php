@@ -5,6 +5,12 @@ namespace Saml\Ecp\Discovery\Method;
 use Saml\Ecp\Util\Options;
 
 
+/**
+ * Abstract discovery method class.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 abstract class AbstractMethod implements MethodInterface
 {
 
@@ -21,7 +27,7 @@ abstract class AbstractMethod implements MethodInterface
      * 
      * @param array|\Traversable $options
      */
-    public function __construct ($options = array())
+    public function __construct($options = array())
     {
         $this->setOptions($options);
     }
@@ -32,7 +38,7 @@ abstract class AbstractMethod implements MethodInterface
      * 
      * @param array|\Traversable $options
      */
-    public function setOptions ($options)
+    public function setOptions($options)
     {
         $this->_options = new Options($options);
     }

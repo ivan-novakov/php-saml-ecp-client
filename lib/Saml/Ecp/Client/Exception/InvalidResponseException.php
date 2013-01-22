@@ -5,6 +5,12 @@ namespace Saml\Ecp\Client\Exception;
 use Saml\Ecp\Response\ResponseInterface;
 
 
+/**
+ * Runtime exception thrown because of invalid response (response which has not passed the validator checks).
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class InvalidResponseException extends \RuntimeException
 {
 
@@ -26,10 +32,10 @@ class InvalidResponseException extends \RuntimeException
     /**
      * Constructor.
      * 
-     * @param ResponseInterface $response
-     * @param array $messages
+     * @param ResponseInterface $response The invalid response object.
+     * @param array $messages Validation error messages.
      */
-    public function __construct (ResponseInterface $response, array $messages)
+    public function __construct(ResponseInterface $response, array $messages)
     {
         $this->_response = $response;
         $this->_messages = $messages;
@@ -43,7 +49,7 @@ class InvalidResponseException extends \RuntimeException
      * 
      * @return ResponseInterface
      */
-    public function getResponse ()
+    public function getResponse()
     {
         return $this->_response;
     }
@@ -51,9 +57,10 @@ class InvalidResponseException extends \RuntimeException
 
     /**
      * Returns the validation error messages.
+     * 
      * @return array
      */
-    public function getMessages ()
+    public function getMessages()
     {
         return $this->_messages;
     }

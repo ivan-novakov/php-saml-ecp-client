@@ -14,7 +14,9 @@ use Saml\Ecp\Client\MimeType;
 
 /**
  * Factory class for creating response validators.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 class ValidatorFactory implements ValidatorFactoryInterface
 {
@@ -59,7 +61,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * 
      * @param array|\Traversable $options
      */
-    public function __construct ($options = array())
+    public function __construct($options = array())
     {
         $this->setOptions($options);
     }
@@ -70,7 +72,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * 
      * @param array|\Traversable $options
      */
-    public function setOptions ($options)
+    public function setOptions($options)
     {
         $this->_options = new Options($options);
     }
@@ -83,7 +85,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * @param mixed $defaultValue
      * @return mixed
      */
-    public function getOption ($name, $defaultValue = null)
+    public function getOption($name, $defaultValue = null)
     {
         return $this->_options->get($name, $defaultValue);
     }
@@ -95,7 +97,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * @throws GeneralException\MissingDependencyException
      * @return Context
      */
-    public function getClientContext ()
+    public function getClientContext()
     {
         if (! ($this->_clientContext instanceof Context)) {
             throw new GeneralException\MissingDependencyException('client context');
@@ -110,17 +112,17 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * 
      * @param Context $clientContext
      */
-    public function setClientContext (Context $clientContext)
+    public function setClientContext(Context $clientContext)
     {
         $this->_clientContext = $clientContext;
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorFactoryInterface::createSpInitialResponseValidator()
      */
-    public function createSpInitialResponseValidator (array $options = array())
+    public function createSpInitialResponseValidator(array $options = array())
     {
         $chainValidator = new Chain();
         
@@ -141,10 +143,10 @@ class ValidatorFactory implements ValidatorFactoryInterface
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorFactoryInterface::createIdpAuthnResponseValidator()
      */
-    public function createIdpAuthnResponseValidator (array $options = array())
+    public function createIdpAuthnResponseValidator(array $options = array())
     {
         $chainValidator = new Chain();
         
@@ -177,7 +179,7 @@ class ValidatorFactory implements ValidatorFactoryInterface
      * 
      * @return string
      */
-    protected function _getSpAssertionConsumerServiceUrl ()
+    protected function _getSpAssertionConsumerServiceUrl()
     {
         $request = $this->getClientContext()
             ->getSpInitialResponse();

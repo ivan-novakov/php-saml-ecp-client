@@ -6,6 +6,12 @@ use Saml\Ecp\Soap\Container\BodyCopier;
 use Saml\Ecp\Soap\Container\ContainerInterface;
 
 
+/**
+ * Request factory class.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class RequestFactory implements RequestFactoryInterface
 {
 
@@ -22,7 +28,7 @@ class RequestFactory implements RequestFactoryInterface
      * 
      * @return BodyCopier
      */
-    public function getSoapBodyCopier ()
+    public function getSoapBodyCopier()
     {
         if (! ($this->_soapBodyCopier instanceof BodyCopier)) {
             $this->_soapBodyCopier = new BodyCopier();
@@ -37,18 +43,18 @@ class RequestFactory implements RequestFactoryInterface
      * 
      * @param BodyCopier $soapBodyCopier
      */
-    public function setSoapBodyCopier (BodyCopier $soapBodyCopier)
+    public function setSoapBodyCopier(BodyCopier $soapBodyCopier)
     {
         $this->_soapBodyCopier = $soapBodyCopier;
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Request\RequestFactoryInterface::createSpInitialRequest()
      * @return SpInitialRequest
      */
-    public function createSpInitialRequest ($protectedContentUri)
+    public function createSpInitialRequest($protectedContentUri)
     {
         $request = new SpInitialRequest();
         $request->setUri($protectedContentUri);
@@ -58,11 +64,11 @@ class RequestFactory implements RequestFactoryInterface
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Request\RequestFactoryInterface::createIdpAuthnRequest()
      * @return IdpAuthnRequest
      */
-    public function createIdpAuthnRequest (ContainerInterface $soapContainer, $idpEndpointUrl)
+    public function createIdpAuthnRequest(ContainerInterface $soapContainer, $idpEndpointUrl)
     {
         $request = new IdpAuthnRequest();
         $this->getSoapBodyCopier()
@@ -74,11 +80,11 @@ class RequestFactory implements RequestFactoryInterface
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Request\RequestFactoryInterface::createSpAuthnConveyRequest()
      * @return SpConveyAuthnRequest
      */
-    public function createSpAuthnConveyRequest (ContainerInterface $soapContainer, $spEndpointUrl)
+    public function createSpAuthnConveyRequest(ContainerInterface $soapContainer, $spEndpointUrl)
     {
         $request = new SpConveyAuthnRequest();
         $this->getSoapBodyCopier()
@@ -90,11 +96,11 @@ class RequestFactory implements RequestFactoryInterface
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Request\RequestFactoryInterface::createSpResourceRequest()
      * @return SpResourceRequest
      */
-    public function createSpResourceRequest ($resourceUri)
+    public function createSpResourceRequest($resourceUri)
     {
         $request = new SpResourceRequest();
         $request->setUri($resourceUri);

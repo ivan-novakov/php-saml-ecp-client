@@ -10,13 +10,25 @@ use Saml\Ecp\Response\ResponseInterface;
  * 
  *   - "actor" with value "http://schemas.xmlsoap.org/soap/actor/next"
  *   - "mustUnderstand" with value "1"
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 class SoapHeaderActor extends AbstractValidator
 {
 
+    /**
+     * SOAP envelope namespace.
+     * 
+     * @var string
+     */
     protected $_soapEnvelopeNamespaceUri = 'http://schemas.xmlsoap.org/soap/envelope/';
 
+    /**
+     * Required attribute values.
+     * 
+     * @var array
+     */
     protected $_requiredAttributeValues = array(
         'actor' => 'http://schemas.xmlsoap.org/soap/actor/next', 
         'mustUnderstand' => '1'
@@ -28,17 +40,17 @@ class SoapHeaderActor extends AbstractValidator
      * 
      * @param array $requiredAttributeValues
      */
-    public function setRequiredAttributeValues (array $requiredAttributeValues)
+    public function setRequiredAttributeValues(array $requiredAttributeValues)
     {
         $this->_requiredAttributeValues = $requiredAttributeValues;
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorInterface::isValid()
      */
-    public function isValid (ResponseInterface $response)
+    public function isValid(ResponseInterface $response)
     {
         $valid = false;
         

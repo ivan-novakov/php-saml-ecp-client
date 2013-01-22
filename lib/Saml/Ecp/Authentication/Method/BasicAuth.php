@@ -7,6 +7,12 @@ use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Util\Options;
 
 
+/**
+ * Abstract authentication method class.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class BasicAuth extends AbstractMethod
 {
 
@@ -16,10 +22,10 @@ class BasicAuth extends AbstractMethod
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Authentication\Method\AbstractMethod::validateOptions()
      */
-    public function validateOptions (Options $options)
+    public function validateOptions(Options $options)
     {
         if (! $options->get(self::OPT_USERNAME)) {
             throw new GeneralException\MissingOptionException(self::OPT_USERNAME);
@@ -32,10 +38,10 @@ class BasicAuth extends AbstractMethod
 
 
     /**
-     * (non-PHPdoc)
-     * @see \Saml\Ecp\Authentication\Method\AbstractMethod::configureHttpClient()
+     * {@inheritdoc}
+     * @see \Saml\Ecp\Authentication\Method\MethodInterface::configureHttpClient()
      */
-    public function configureHttpClient (Client $httpClient)
+    public function configureHttpClient(Client $httpClient)
     {
         $httpClient->setAuth($this->_options->get(self::OPT_USERNAME), $this->_options->get(self::OPT_PASSWORD), Client::AUTH_BASIC);
     }

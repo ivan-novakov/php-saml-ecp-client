@@ -5,17 +5,23 @@ namespace Saml\Ecp\Response\Validator;
 use Saml\Ecp\Response\ResponseInterface;
 
 
+/**
+ * Checks if the response is a valid SOAP response.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class SoapResponse extends AbstractValidator
 {
-
-    protected $_defContentType = 'application/soap+xml';
-
+    
+    //protected $_defContentType = 'application/soap+xml';
+    
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorInterface::isValid()
      */
-    public function isValid (ResponseInterface $response)
+    public function isValid(ResponseInterface $response)
     {
         $soapMessage = $response->getSoapMessage();
         if ($soapMessage->isFault()) {

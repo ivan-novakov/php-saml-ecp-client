@@ -7,7 +7,9 @@ use Saml\Ecp\Soap\Message\Message;
 
 /**
  * Interface for objects which contain a SOAP message, typically ECP requests or response objects.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 interface ContainerInterface
 {
@@ -18,7 +20,7 @@ interface ContainerInterface
      * 
      * @param Message $soapMessage
      */
-    public function setSoapMessage (Message $soapMessage);
+    public function setSoapMessage(Message $soapMessage);
 
 
     /**
@@ -26,5 +28,5 @@ interface ContainerInterface
      * 
      * @return Message
      */
-    public function getSoapMessage ();
+    public function getSoapMessage();
 }

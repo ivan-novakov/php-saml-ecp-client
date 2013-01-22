@@ -8,6 +8,12 @@ use Saml\Ecp\Soap\Exception as SoapException;
 use Zend\Stdlib\ErrorHandler;
 
 
+/**
+ * Base class representing a SOAP message.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class Message
 {
 
@@ -53,7 +59,7 @@ class Message
      * @param string $soapData
      * @param XpathManager $xpathManager
      */
-    public function __construct ($soapData = null, XpathManager $xpathManager = null)
+    public function __construct($soapData = null, XpathManager $xpathManager = null)
     {
         // FIXME - get rid of the static call
         $this->_namespaces = Namespaces::getAll();
@@ -76,7 +82,7 @@ class Message
      * @param string $soapData
      * @throws SoapException\LoadSoapDataException
      */
-    public function fromString ($soapData)
+    public function fromString($soapData)
     {
         $dom = $this->getDom();
         
@@ -103,7 +109,7 @@ class Message
      * 
      * @return \DOMDocument
      */
-    public function getDom ($reset = false)
+    public function getDom($reset = false)
     {
         if ($reset || ! ($this->_dom instanceof \DOMDocument)) {
             $this->_dom = $this->_createDom();
@@ -118,7 +124,7 @@ class Message
      * 
      * @return boolean
      */
-    public function isFault ()
+    public function isFault()
     {
         $node = $this->getNodeByXpath('/S:Envelope/S:Body/S:Fault');
         if ($node) {
@@ -134,7 +140,7 @@ class Message
      * 
      * @return string|null
      */
-    public function getFaultCode ()
+    public function getFaultCode()
     {
         return $this->getNodeValueByXpath('/S:Envelope/S:Body/S:Fault/faultcode');
     }
@@ -145,7 +151,7 @@ class Message
      * 
      * @return string|null
      */
-    public function getFaultString ()
+    public function getFaultString()
     {
         return $this->getNodeValueByXpath('/S:Envelope/S:Body/S:Fault/faultstring');
     }
@@ -156,7 +162,7 @@ class Message
      * 
      * @return string|null
      */
-    public function getFaultDetail ()
+    public function getFaultDetail()
     {
         return $this->getNodeValueByXpath('/S:Envelope/S:Body/S:Fault/detail');
     }
@@ -167,7 +173,7 @@ class Message
      * 
      * @param \DomDocument $dom
      */
-    public function setDom (\DomDocument $dom)
+    public function setDom(\DomDocument $dom)
     {
         $this->_dom = $dom;
         $this->_xpath = null;
@@ -181,7 +187,7 @@ class Message
      * 
      * @return array
      */
-    public function getRegisteredNamespaces ()
+    public function getRegisteredNamespaces()
     {
         return $this->_namespaces;
     }
@@ -192,7 +198,7 @@ class Message
      *
      * @param XpathManager $xpathManager
      */
-    public function setXpathManager (XpathManager $xpathManager)
+    public function setXpathManager(XpathManager $xpathManager)
     {
         $this->_xpathManager = $xpathManager;
     }
@@ -201,9 +207,9 @@ class Message
     /**
      * Returns the XPath manager.
      *
-     * @return \Saml\Ecp\Soap\XpathManager
+     * @return XpathManager
      */
-    public function getXpathManager ()
+    public function getXpathManager()
     {
         if (! ($this->_xpathManager instanceof XpathManager)) {
             $this->_xpathManager = new XpathManager($this->getRegisteredNamespaces());
@@ -218,7 +224,7 @@ class Message
      * 
      * @return \DOMXPath
      */
-    public function getXpath ()
+    public function getXpath()
     {
         if (! ($this->_xpath instanceof \DomXpath)) {
             $this->_xpath = $this->getXpathManager()
@@ -234,7 +240,7 @@ class Message
      * 
      * @param \DomXpath $xpath
      */
-    public function setXpath ($xpath)
+    public function setXpath($xpath)
     {
         $this->_xpath = $xpath;
     }
@@ -245,7 +251,7 @@ class Message
      * 
      * @return \DOMElement|NULL
      */
-    public function getBody ()
+    public function getBody()
     {
         $elements = $this->_getElementsByTagName($this->_soapNsPrefix, 'Body');
         if ($elements->length) {
@@ -261,7 +267,7 @@ class Message
      * 
      * @return \DOMNodeList
      */
-    public function getHeaderElements ()
+    public function getHeaderElements()
     {
         $xpath = $this->getXpath();
         $elements = $xpath->query(sprintf("/%s:Envelope/%s:Header/*", $this->_soapNsPrefix, $this->_soapNsPrefix));
@@ -275,7 +281,7 @@ class Message
      * 
      * @return \DOMNodeList
      */
-    public function getBodyElements ()
+    public function getBodyElements()
     {
         $xpath = $this->getXpath();
         $elements = $xpath->query(sprintf("/%s:Envelope/%s:Body/*", $this->_soapNsPrefix, $this->_soapNsPrefix));
@@ -290,7 +296,7 @@ class Message
      * @param \DomElement $element
      * @throws SoapException\ImportNodeException
      */
-    public function addBodyElement (\DomElement $element)
+    public function addBodyElement(\DomElement $element)
     {
         $dom = $this->getDom();
         
@@ -311,7 +317,7 @@ class Message
      * 
      * @param Message $message
      */
-    public function copyBodyFromMessage (Message $message)
+    public function copyBodyFromMessage(Message $message)
     {
         $bodyElements = $message->getBodyElements();
         
@@ -328,7 +334,7 @@ class Message
      * @param \DomElement $child
      * @throws SoapException\AppendChildException
      */
-    public function appendChildToElement (\DomElement $element,\DomElement $child)
+    public function appendChildToElement(\DomElement $element,\DomElement $child)
     {
         try {
             return $element->appendChild($child);
@@ -344,7 +350,7 @@ class Message
      * @param string $xpathQuery
      * @return \DOMNode|null
      */
-    public function getNodeByXpath ($xpathQuery)
+    public function getNodeByXpath($xpathQuery)
     {
         $nodes = $this->getXpath()
             ->query($xpathQuery);
@@ -363,7 +369,7 @@ class Message
      * @param string $xpathQuery
      * @return string|null     
      */
-    public function getNodeValueByXpath ($xpathQuery)
+    public function getNodeValueByXpath($xpathQuery)
     {
         $node = $this->getNodeByXpath($xpathQuery);
         if ($node instanceof \DOMNode) {
@@ -380,7 +386,7 @@ class Message
      * @param string $xpathQuery
      * @return \DOMNodeList
      */
-    public function xpathQuery ($xpathQuery)
+    public function xpathQuery($xpathQuery)
     {
         return $this->getXpath()
             ->query($xpathQuery);
@@ -392,7 +398,7 @@ class Message
      * 
      * @return string
      */
-    public function toString ()
+    public function toString()
     {
         return $this->getDom()
             ->saveXML();
@@ -404,7 +410,7 @@ class Message
      * 
      * @return string
      */
-    public function __toString ()
+    public function __toString()
     {
         return $this->toString();
     }
@@ -418,7 +424,7 @@ class Message
      * 
      * @return \DOMDocument
      */
-    protected function _createDom ()
+    protected function _createDom()
     {
         return new \DOMDocument('1.0', 'utf-8');
     }
@@ -427,7 +433,7 @@ class Message
     /**
      * Initializes SOAP envelope with empty header and body.
      */
-    protected function _initDom ($soapPrefix = null)
+    protected function _initDom($soapPrefix = null)
     {
         if (null === $soapPrefix) {
             $soapPrefix = $this->_soapNsPrefix;
@@ -447,7 +453,7 @@ class Message
      * @param string $name
      * @return \DOMElement
      */
-    protected function _createElement ($prefix, $name)
+    protected function _createElement($prefix, $name)
     {
         $dom = $this->getDom();
         $nsUri = $this->_getNamespaceUri($prefix);
@@ -464,7 +470,7 @@ class Message
      * @param string $name
      * @return \DOMNodeList
      */
-    protected function _getElementsByTagName ($prefix, $name)
+    protected function _getElementsByTagName($prefix, $name)
     {
         $dom = $this->getDom();
         $nsUri = $this->_getNamespaceUri($prefix);
@@ -480,7 +486,7 @@ class Message
      * @throws SoapException\InvalidNamespaceException
      * @return string
      */
-    protected function _getNamespaceUri ($prefix)
+    protected function _getNamespaceUri($prefix)
     {
         $namespaces = $this->getRegisteredNamespaces();
         if (! isset($namespaces[$prefix])) {

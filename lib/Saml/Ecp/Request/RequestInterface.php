@@ -5,6 +5,12 @@ namespace Saml\Ecp\Request;
 use Saml\Ecp\Soap\Container\ContainerInterface;
 
 
+/**
+ * Request interface.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface RequestInterface extends ContainerInterface
 {
 
@@ -14,7 +20,7 @@ interface RequestInterface extends ContainerInterface
      * 
      * @param string $uri
      */
-    public function setUri ($uri);
+    public function setUri($uri);
 
 
     /**
@@ -22,7 +28,7 @@ interface RequestInterface extends ContainerInterface
      * 
      * @return string
      */
-    public function getUri ();
+    public function getUri();
 
 
     /**
@@ -30,7 +36,7 @@ interface RequestInterface extends ContainerInterface
      * 
      * @param string $content
      */
-    public function setContent ($content);
+    public function setContent($content);
 
 
     /**
@@ -38,5 +44,5 @@ interface RequestInterface extends ContainerInterface
      * 
      * @return \Zend\Http\Request
      */
-    public function getHttpRequest ();
+    public function getHttpRequest();
 }

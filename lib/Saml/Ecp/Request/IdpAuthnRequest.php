@@ -5,11 +5,21 @@ namespace Saml\Ecp\Request;
 use Saml\Ecp\Soap\Message\AuthnRequest;
 
 
+/**
+ * Authentication request to be sent to the IdP.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class IdpAuthnRequest extends AbstractRequest
 {
 
 
-    protected function _init ()
+    /**
+     * {@inheritdoc}
+     * @see \Saml\Ecp\Request\AbstractRequest::_init()
+     */
+    protected function _init()
     {
         $this->getHttpRequest()
             ->setMethod(\Zend\Http\Request::METHOD_POST);
@@ -17,10 +27,10 @@ class IdpAuthnRequest extends AbstractRequest
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Request\AbstractRequest::_createSoapMessage()
      */
-    protected function _createSoapMessage ()
+    protected function _createSoapMessage()
     {
         return new AuthnRequest();
     }

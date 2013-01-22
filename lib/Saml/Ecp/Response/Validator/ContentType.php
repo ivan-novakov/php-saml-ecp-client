@@ -6,19 +6,31 @@ use Saml\Ecp\Exception as GeneralException;
 use Saml\Ecp\Response\ResponseInterface;
 
 
+/**
+ * Checks if the response is of the required content type.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class ContentType extends AbstractValidator
 {
 
+    /**
+     * Option index.
+     */
     const OPT_EXPECTED_CONTENT_TYPE = 'expected_content_type';
 
+    /**
+     * Option index.
+     */
     const OPT_PARTIAL = 'partial';
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorInterface::isValid()
      */
-    public function isValid (ResponseInterface $response)
+    public function isValid(ResponseInterface $response)
     {
         $partial = $this->getOption(self::OPT_PARTIAL);
         $expectedContentType = $this->getOption(self::OPT_EXPECTED_CONTENT_TYPE);

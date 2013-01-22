@@ -7,7 +7,9 @@ use Saml\Ecp\Soap\Message\AuthnResponse;
 
 /**
  * The response sent by the IdP after sending the authn request.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 class IdpAuthnResponse extends AbstractResponse implements AuthnResponseInterface
 {

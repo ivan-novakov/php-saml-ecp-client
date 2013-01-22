@@ -9,19 +9,24 @@ use Saml\Ecp\Exception as GeneralException;
 
 /**
  * Validates that the response contains a valid SOAP envelope.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 class SoapEnvelope extends AbstractValidator
 {
 
+    /**
+     * Option index.
+     */
     const OPT_SOAP_ENVELOPE_XSD = 'soap_envelope_xsd';
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorInterface::isValid()
      */
-    public function isValid (ResponseInterface $response)
+    public function isValid(ResponseInterface $response)
     {
         $valid = false;
         

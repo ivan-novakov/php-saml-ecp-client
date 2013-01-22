@@ -5,6 +5,12 @@ namespace Saml\Ecp\Response\Validator;
 use Saml\Ecp\Response\ResponseInterface;
 
 
+/**
+ * Response validator interface.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface ValidatorInterface
 {
 

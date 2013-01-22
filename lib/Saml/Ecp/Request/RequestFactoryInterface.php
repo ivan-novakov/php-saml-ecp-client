@@ -5,6 +5,12 @@ namespace Saml\Ecp\Request;
 use Saml\Ecp\Soap\Container\ContainerInterface;
 
 
+/**
+ * Request factory interface.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface RequestFactoryInterface
 {
 

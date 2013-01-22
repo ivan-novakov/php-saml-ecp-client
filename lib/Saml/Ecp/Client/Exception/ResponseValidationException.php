@@ -9,6 +9,9 @@ use Saml\Ecp\Response\ResponseInterface;
 
 /**
  * Thrown when there is an unexpected error during response validation.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 class ResponseValidationException extends \RuntimeException
 {
@@ -28,8 +31,14 @@ class ResponseValidationException extends \RuntimeException
     protected $_validator = null;
 
 
-    public function __construct (ResponseInterface $response, ValidatorInterface $validator, 
-        Exception $previousException)
+    /**
+     * Constructor.
+     * 
+     * @param ResponseInterface $response The response object.
+     * @param ValidatorInterface $validator The validator object.
+     * @param Exception $previousException The validation exception.
+     */
+    public function __construct(ResponseInterface $response, ValidatorInterface $validator, Exception $previousException)
     {
         $this->_response = $response;
         $this->_validator = $validator;
@@ -43,7 +52,7 @@ class ResponseValidationException extends \RuntimeException
      * 
      * @return ResponseInterface
      */
-    public function getResponse ()
+    public function getResponse()
     {
         return $this->_response;
     }
@@ -54,7 +63,7 @@ class ResponseValidationException extends \RuntimeException
      * 
      * @return ValidatorInterface
      */
-    public function getValidator ()
+    public function getValidator()
     {
         return $this->_validator;
     }

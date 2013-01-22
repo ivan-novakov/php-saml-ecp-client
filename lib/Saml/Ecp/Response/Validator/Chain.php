@@ -7,7 +7,9 @@ use Saml\Ecp\Response\ResponseInterface;
 
 /**
  * Validator chain - a composite validator which iterates through a list of validators.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 class Chain extends AbstractValidator
 {
@@ -21,10 +23,10 @@ class Chain extends AbstractValidator
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorInterface::isValid()
      */
-    public function isValid (ResponseInterface $response)
+    public function isValid(ResponseInterface $response)
     {
         foreach ($this->_validators as $validator) {
             if (! $validator->isValid($response)) {
@@ -45,7 +47,7 @@ class Chain extends AbstractValidator
      * 
      * @param ValidatorInterface $validator
      */
-    public function addValidator (ValidatorInterface $validator)
+    public function addValidator(ValidatorInterface $validator)
     {
         $this->_validators[] = $validator;
     }
@@ -56,7 +58,7 @@ class Chain extends AbstractValidator
      * 
      * @return array
      */
-    public function getValidators ()
+    public function getValidators()
     {
         return $this->_validators;
     }

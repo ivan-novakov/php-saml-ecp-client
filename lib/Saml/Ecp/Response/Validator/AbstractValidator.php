@@ -7,7 +7,9 @@ use Saml\Ecp\Util\Options;
 
 /**
  * Abstract response validator class.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 abstract class AbstractValidator implements ValidatorInterface
 {
@@ -32,7 +34,7 @@ abstract class AbstractValidator implements ValidatorInterface
      * 
      * @param array|\Trversable $optios
      */
-    public function __construct ($options = array())
+    public function __construct($options = array())
     {
         $this->setOptions($options);
     }
@@ -43,7 +45,7 @@ abstract class AbstractValidator implements ValidatorInterface
      * 
      * @param array|\Trversable $optios
      */
-    public function setOptions ($options)
+    public function setOptions($options)
     {
         $this->_options = new Options($options);
     }
@@ -54,7 +56,7 @@ abstract class AbstractValidator implements ValidatorInterface
      * 
      * @return Options
      */
-    public function getOptions ()
+    public function getOptions()
     {
         return $this->_options;
     }
@@ -67,7 +69,7 @@ abstract class AbstractValidator implements ValidatorInterface
      * @param mixed $defaultValue
      * @return mixed
      */
-    public function getOption ($name, $defaultValue = null)
+    public function getOption($name, $defaultValue = null)
     {
         return $this->_options->get($name, $defaultValue);
     }
@@ -78,17 +80,17 @@ abstract class AbstractValidator implements ValidatorInterface
      * 
      * @param string $message
      */
-    public function addMessage ($message)
+    public function addMessage($message)
     {
         $this->_messages[] = $message;
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\Validator\ValidatorInterface::getMessages()
      */
-    public function getMessages ()
+    public function getMessages()
     {
         return $this->_messages;
     }

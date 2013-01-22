@@ -6,8 +6,10 @@ use Saml\Ecp\Request\SpResourceRequest;
 
 
 /**
- * Interface for response factories.
- *
+ * Response factory interface.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 interface ResponseFactoryInterface
 {
@@ -19,7 +21,7 @@ interface ResponseFactoryInterface
      * @param \Zend\Http\Response $httpResponse
      * @return SpInitialResponse
      */
-    public function createSpInitialResponse (\Zend\Http\Response $httpResponse);
+    public function createSpInitialResponse(\Zend\Http\Response $httpResponse);
 
 
     /**
@@ -28,7 +30,7 @@ interface ResponseFactoryInterface
      * @param \Zend\Http\Response $httpResponse
      * @return IdpAuthnResponse
      */
-    public function createIdpAuthnResponse (\Zend\Http\Response $httpResponse);
+    public function createIdpAuthnResponse(\Zend\Http\Response $httpResponse);
 
 
     /**
@@ -37,7 +39,7 @@ interface ResponseFactoryInterface
      * @param \Zend\Http\Response $httpResponse
      * @return SpConveyAuthnResponse
      */
-    public function createSpConveryAuthnResponse (\Zend\Http\Response $httpResponse);
+    public function createSpConveryAuthnResponse(\Zend\Http\Response $httpResponse);
 
 
     /**
@@ -46,5 +48,5 @@ interface ResponseFactoryInterface
      * @param \Zend\Http\Response $httpResponse
      * @return SpResourceResponse
      */
-    public function createSpResourceResponse (\Zend\Http\Response $httpResponse);
+    public function createSpResourceResponse(\Zend\Http\Response $httpResponse);
 }

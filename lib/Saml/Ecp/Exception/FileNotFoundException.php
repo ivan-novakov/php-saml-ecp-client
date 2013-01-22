@@ -3,11 +3,22 @@
 namespace Saml\Ecp\Exception;
 
 
+/**
+ * Runtime exception indicating missing file.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class FileNotFoundException extends \RuntimeException
 {
 
 
-    public function __construct ($filename)
+    /**
+     * Constructor.
+     * 
+     * @param string $filename
+     */
+    public function __construct($filename)
     {
         parent::__construct(sprintf("File not found: '%s'", $filename));
     }

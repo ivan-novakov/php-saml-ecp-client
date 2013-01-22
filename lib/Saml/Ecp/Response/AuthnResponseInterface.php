@@ -5,7 +5,9 @@ namespace Saml\Ecp\Response;
 
 /**
  * Authn response interface - adds some specific methods.
- *
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  */
 interface AuthnResponseInterface extends ResponseInterface
 {

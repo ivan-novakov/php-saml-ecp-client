@@ -5,6 +5,12 @@ namespace Saml\Ecp\Authentication\Method;
 use Zend\Http\Client;
 
 
+/**
+ * Interface for authentication methods.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface MethodInterface
 {
 
@@ -14,5 +20,5 @@ interface MethodInterface
      * 
      * @param Client $httpClient
      */
-    public function configureHttpClient (Client $httpClient);
+    public function configureHttpClient(Client $httpClient);
 }

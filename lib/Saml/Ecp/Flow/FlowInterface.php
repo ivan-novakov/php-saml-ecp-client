@@ -7,6 +7,12 @@ use Saml\Ecp\Authentication;
 use Saml\Ecp\Discovery;
 
 
+/**
+ * Flow interface - describes the API for objects implementing the whole authentication ECP flow.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface FlowInterface
 {
 
@@ -16,7 +22,7 @@ interface FlowInterface
      *
      * @param Client $client
      */
-    public function setClient (Client $client);
+    public function setClient(Client $client);
 
 
     /**
@@ -27,6 +33,6 @@ interface FlowInterface
      * @param Discovery\Method\MethodInterface $discoveryMethod
      * @return ResponseInterface
      */
-    public function authenticate ($protectedContentUrl, Discovery\Method\MethodInterface $discoveryMethod, 
+    public function authenticate($protectedContentUrl, Discovery\Method\MethodInterface $discoveryMethod, 
         Authentication\Method\MethodInterface $authenticationMethod);
 }

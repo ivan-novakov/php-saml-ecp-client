@@ -6,6 +6,12 @@ use Saml\Ecp\Soap\Container\ContainerInterface;
 use Saml\Ecp\Soap\Message;
 
 
+/**
+ * Response interface.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface ResponseInterface extends ContainerInterface
 {
 
@@ -15,7 +21,7 @@ interface ResponseInterface extends ContainerInterface
      * 
      * @param \Zend\Http\Response $response
      */
-    public function setHttpResponse (\Zend\Http\Response $response);
+    public function setHttpResponse(\Zend\Http\Response $response);
 
 
     /**
@@ -23,7 +29,7 @@ interface ResponseInterface extends ContainerInterface
      * 
      * @return \Zend\Http\Response
      */
-    public function getHttpResponse ();
+    public function getHttpResponse();
 
 
     /**
@@ -31,5 +37,5 @@ interface ResponseInterface extends ContainerInterface
      *
      * @return string
      */
-    public function getContent ();
+    public function getContent();
 }

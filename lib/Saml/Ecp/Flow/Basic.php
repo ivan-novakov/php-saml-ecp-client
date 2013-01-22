@@ -9,6 +9,12 @@ use Saml\Ecp\Discovery;
 use Saml\Ecp\Request;
 
 
+/**
+ * Basic implementation of the ECP authentication flow.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class Basic implements FlowInterface
 {
 
@@ -33,7 +39,7 @@ class Basic implements FlowInterface
      * @throws GeneralException\MissingDependencyException
      * @return Client
      */
-    public function getClient ()
+    public function getClient()
     {
         if (! ($this->_client instanceof Client)) {
             throw new GeneralException\MissingDependencyException('client');
@@ -43,10 +49,10 @@ class Basic implements FlowInterface
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Flow\FlowInterface::setClient()
      */
-    public function setClient (Client $client)
+    public function setClient(Client $client)
     {
         $this->_client = $client;
     }
@@ -57,7 +63,7 @@ class Basic implements FlowInterface
      *
      * @return Request\RequestFactoryInterface
      */
-    public function getRequestFactory ()
+    public function getRequestFactory()
     {
         if (! ($this->_requestFactory instanceof Request\RequestFactoryInterface)) {
             $this->_requestFactory = new Request\RequestFactory();
@@ -72,17 +78,17 @@ class Basic implements FlowInterface
      *
      * @param Request\RequestFactoryInterface $requestFactory
      */
-    public function setRequestFactory (Request\RequestFactoryInterface $requestFactory)
+    public function setRequestFactory(Request\RequestFactoryInterface $requestFactory)
     {
         $this->_requestFactory = $requestFactory;
     }
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Flow\FlowInterface::authenticate()
      */
-    public function authenticate ($protectedContentUrl, Discovery\Method\MethodInterface $discoveryMethod, 
+    public function authenticate($protectedContentUrl, Discovery\Method\MethodInterface $discoveryMethod, 
         Authentication\Method\MethodInterface $authenticationMethod)
     {
         $client = $this->getClient();

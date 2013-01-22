@@ -3,6 +3,12 @@
 namespace Saml\Ecp\Soap\Message;
 
 
+/**
+ * Authn response SOAP message.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class AuthnResponse extends Message
 {
 

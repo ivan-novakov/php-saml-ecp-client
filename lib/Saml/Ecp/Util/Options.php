@@ -3,6 +3,12 @@
 namespace Saml\Ecp\Util;
 
 
+/**
+ * Simple container for object options.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 class Options extends \ArrayObject
 {
 
@@ -12,7 +18,7 @@ class Options extends \ArrayObject
      *
      * @param array|\Traversable $options
      */
-    public function __construct ($options = NULL)
+    public function __construct($options = NULL)
     {
         if (NULL === $options) {
             $options = array();
@@ -31,7 +37,7 @@ class Options extends \ArrayObject
      * @param mixed $defaultValue
      * @return mixed|NULL
      */
-    public function get ($key, $defaultValue = NULL)
+    public function get($key, $defaultValue = NULL)
     {
         if ($this->offsetExists($key)) {
             return $this->offsetGet($key);
@@ -51,7 +57,7 @@ class Options extends \ArrayObject
      * @param string $key
      * @param mixed $value
      */
-    public function set ($key, $value)
+    public function set($key, $value)
     {
         $this->offsetSet($key, $value);
     }
@@ -62,7 +68,7 @@ class Options extends \ArrayObject
      * 
      * @return array
      */
-    public function toArray ()
+    public function toArray()
     {
         return (array) $this;
     }

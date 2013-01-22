@@ -3,6 +3,12 @@
 namespace Saml\Ecp\Response\Validator;
 
 
+/**
+ * Validator factory interface.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
+ */
 interface ValidatorFactoryInterface
 {
 
@@ -12,7 +18,7 @@ interface ValidatorFactoryInterface
      * 
      * @return ValidatorInterface
      */
-    public function createSpInitialResponseValidator (array $options = array());
+    public function createSpInitialResponseValidator(array $options = array());
 
 
     /**
@@ -20,5 +26,5 @@ interface ValidatorFactoryInterface
      * 
      * @return ValidatorInterface
      */
-    public function createIdpAuthnResponseValidator (array $options = array());
+    public function createIdpAuthnResponseValidator(array $options = array());
 }

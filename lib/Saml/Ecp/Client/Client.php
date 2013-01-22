@@ -14,9 +14,10 @@ use Zend\Log;
 
 
 /**
- * Main "bootstrap" class that brings everyhitng in the library together.
- *
- * "Magic" log calls caught in __call():
+ * Main "bootstrap" class that brings everything in the library together.
+ * 
+ * @copyright (c) 2013 Ivan Novakov (http://novakov.cz/)
+ * @license http://debug.cz/license/freebsd
  * 
  * @method void emerg()    emerg(string $message)
  * @method void alert()    alert(string $message)
@@ -30,8 +31,14 @@ use Zend\Log;
 class Client implements Log\LoggerAwareInterface
 {
 
+    /**
+     * Option name.
+     */
     const OPT_HTTP_CLIENT = 'http_client';
 
+    /**
+     * Option name.
+     */
     const OPT_SOAP_ENVELOPE_XSD = 'soap_envelope_xsd';
 
     /**
@@ -82,7 +89,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param array|\Traversable $options
      */
-    public function __construct ($options = array())
+    public function __construct($options = array())
     {
         $this->setOptions($options);
     }
@@ -93,7 +100,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param array|\Traversable $options
      */
-    public function setOptions ($options)
+    public function setOptions($options)
     {
         $this->_options = new Options($options);
     }
@@ -104,7 +111,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @return Options
      */
-    public function getOptions ()
+    public function getOptions()
     {
         return $this->_options;
     }
@@ -117,7 +124,7 @@ class Client implements Log\LoggerAwareInterface
      * @param mixed $defaultValue
      * @return mixed
      */
-    public function getOption ($name, $defaultValue = null)
+    public function getOption($name, $defaultValue = null)
     {
         return $this->_options->get($name, $defaultValue);
     }
@@ -128,7 +135,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param Log\LoggerInterface $logger
      */
-    public function setLogger (Log\LoggerInterface $logger)
+    public function setLogger(Log\LoggerInterface $logger)
     {
         $this->_logger = $logger;
     }
@@ -139,7 +146,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @return Log\LoggerInterface
      */
-    public function getLogger ($throwException = false)
+    public function getLogger($throwException = false)
     {
         if ($throwException && ! ($this->_logger instanceof Log\LoggerInterface)) {
             throw new GeneralException\MissingDependencyException('logger');
@@ -153,7 +160,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param Context $context
      */
-    public function setContext (Context $context)
+    public function setContext(Context $context)
     {
         $this->_context = $context;
     }
@@ -164,7 +171,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @return Context
      */
-    public function getContext ()
+    public function getContext()
     {
         if (! ($this->_context instanceof Context)) {
             $this->_context = new Context();
@@ -180,7 +187,7 @@ class Client implements Log\LoggerAwareInterface
      * @throws GeneralException\MissingDependencyException
      * @return Http\Client
      */
-    public function getHttpClient ($throwException = false)
+    public function getHttpClient($throwException = false)
     {
         if (! ($this->_httpClient instanceof Http\Client)) {
             
@@ -205,7 +212,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param Http\Client $httpClient
      */
-    public function setHttpClient (Http\Client $httpClient)
+    public function setHttpClient(Http\Client $httpClient)
     {
         $this->_httpClient = $httpClient;
     }
@@ -216,7 +223,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @return Response\ResponseFactoryInterface
      */
-    public function getResponseFactory ()
+    public function getResponseFactory()
     {
         if (! ($this->_responseFactory instanceof Response\ResponseFactoryInterface)) {
             $this->_responseFactory = new Response\ResponseFactory();
@@ -231,7 +238,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param Response\ResponseFactoryInterface $responseFactory
      */
-    public function setResponseFactory (Response\ResponseFactoryInterface $responseFactory)
+    public function setResponseFactory(Response\ResponseFactoryInterface $responseFactory)
     {
         $this->_responseFactory = $responseFactory;
     }
@@ -242,11 +249,12 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @return Response\Validator\ValidatorFactoryInterface
      */
-    public function getResponseValidatorFactory ()
+    public function getResponseValidatorFactory()
     {
         if (! ($this->_responseValidatorFactory instanceof Response\Validator\ValidatorFactoryInterface)) {
             $this->_responseValidatorFactory = new Response\Validator\ValidatorFactory(array(
-                Response\Validator\ValidatorFactory::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD)
+                Response\Validator\ValidatorFactory::OPT_SOAP_ENVELOPE_XSD => $this->getOption(self::OPT_SOAP_ENVELOPE_XSD, __DIR__ .
+                     '/../../../../schema/soap11-envelope.xsd')
             ));
             $this->_responseValidatorFactory->setClientContext($this->getContext());
         }
@@ -260,7 +268,7 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param Response\Validator\ValidatorFactoryInterface $responseValidatorFactory
      */
-    public function setResponseValidatorFactory (Response\Validator\ValidatorFactoryInterface $responseValidatorFactory)
+    public function setResponseValidatorFactory(Response\Validator\ValidatorFactoryInterface $responseValidatorFactory)
     {
         $this->_responseValidatorFactory = $responseValidatorFactory;
     }
@@ -275,7 +283,7 @@ class Client implements Log\LoggerAwareInterface
      * @param RequestInterface $request
      * @return Response\ResponseInterface
      */
-    public function sendInitialRequestToSp (Request\RequestInterface $request)
+    public function sendInitialRequestToSp(Request\RequestInterface $request)
     {
         $this->info($request);
         
@@ -303,9 +311,9 @@ class Client implements Log\LoggerAwareInterface
      * 
      * @param Request\RequestInterface $request
      * @param Authentication\Method\MethodInterface $authenticationMethod
-     * @return Response\ResponseInterface
+     * @return Response\AuthnResponseInterface
      */
-    public function sendAuthnRequestToIdp (Request\RequestInterface $request, 
+    public function sendAuthnRequestToIdp(Request\RequestInterface $request, 
         Authentication\Method\MethodInterface $authenticationMethod)
     {
         $this->info($request);
@@ -333,7 +341,7 @@ class Client implements Log\LoggerAwareInterface
      * @param Request\RequestInterface $request
      * @return Response\ResponseInterface
      */
-    public function sendAuthnResponseToSp (Request\RequestInterface $request)
+    public function sendAuthnResponseToSp(Request\RequestInterface $request)
     {
         $this->info($request);
         
@@ -353,7 +361,7 @@ class Client implements Log\LoggerAwareInterface
      * @param Request\RequestInterface $request
      * @return Response\ResponseInterface
      */
-    public function sendResourceRequestToSp (Request\RequestInterface $request)
+    public function sendResourceRequestToSp(Request\RequestInterface $request)
     {
         $this->info($request);
         
@@ -364,7 +372,7 @@ class Client implements Log\LoggerAwareInterface
         
         $this->info($response);
         
-        $this->info('Identity info: ' . $response->getContent());
+        $this->info('Resource data: ' . $response->getContent());
         return $response;
     }
 
@@ -378,7 +386,7 @@ class Client implements Log\LoggerAwareInterface
      * @throws Exception\InvalidResponseException
      * @throws Exception\ResponseValidationException
      */
-    public function validateResponse (Response\Validator\ValidatorInterface $validator, 
+    public function validateResponse(Response\Validator\ValidatorInterface $validator, 
         Response\ResponseInterface $response, $responseLabel = 'response')
     {
         $valid = false;
@@ -405,7 +413,7 @@ class Client implements Log\LoggerAwareInterface
      * @param string $method
      * @param array $args
      */
-    public function __call ($method, array $args)
+    public function __call($method, array $args)
     {
         $logMethods = array(
             'emerg', 
@@ -440,7 +448,7 @@ class Client implements Log\LoggerAwareInterface
      * @param string $method
      * @param string $message
      */
-    protected function _log ($method, $message)
+    protected function _log($method, $message)
     {
         if ($logger = $this->getLogger()) {
             $logger->$method($message);
@@ -454,7 +462,7 @@ class Client implements Log\LoggerAwareInterface
      * @param array $config
      * @return Http\Client
      */
-    protected function _createHttpClient (array $config)
+    protected function _createHttpClient(array $config)
     {
         $httpClientFactory = new HttpClientFactory();
         $client = $httpClientFactory->createHttpClient($config);
@@ -469,7 +477,7 @@ class Client implements Log\LoggerAwareInterface
      * @param Http\Request $request
      * @return Http\Response
      */
-    protected function _sendHttpRequest (Http\Request $httpRequest)
+    protected function _sendHttpRequest(Http\Request $httpRequest)
     {
         try {
             $httpResponse = $this->getHttpClient()
