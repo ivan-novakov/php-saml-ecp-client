@@ -11,7 +11,7 @@ class HttpClientFactory
 
     const OPT_OPTIONS = 'options';
 
-    const OPT_ZEND_CLIENT_OPTIOS = 'zend_client_options';
+    const OPT_ZEND_CLIENT_OPTIONS = 'zend_client_options';
 
     const OPT_CURL_ADAPTER_OPTIONS = 'curl_adapter_options';
 
@@ -42,8 +42,8 @@ class HttpClientFactory
         
         $options = $config[self::OPT_OPTIONS];
         
-        if (isset($config[self::OPT_ZEND_CLIENT_OPTIOS]) && is_array($config[self::OPT_ZEND_CLIENT_OPTIOS])) {
-            $zendClientOptions = $config[self::OPT_ZEND_CLIENT_OPTIOS] + $zendClientOptions;
+        if (isset($config[self::OPT_ZEND_CLIENT_OPTIONS]) && is_array($config[self::OPT_ZEND_CLIENT_OPTIONS])) {
+            $zendClientOptions = $config[self::OPT_ZEND_CLIENT_OPTIONS] + $zendClientOptions;
         }
         
         if (isset($config[self::OPT_CURL_ADAPTER_OPTIONS]) && is_array($config[self::OPT_CURL_ADAPTER_OPTIONS])) {
