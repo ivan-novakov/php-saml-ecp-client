@@ -16,8 +16,6 @@ $globalConfig = new \Zend\Config\Config(array(
     ), 
     
     'client' => array(
-        'soap_envelope_xsd' => __DIR__ . '/../schema/soap11-envelope.xsd', 
-        
         'http_client' => array(
             'options' => array(
                 'cafile' => '/etc/ssl/certs/ca-bundle.pem'
