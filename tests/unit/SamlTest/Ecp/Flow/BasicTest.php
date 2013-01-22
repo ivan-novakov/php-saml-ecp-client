@@ -47,12 +47,11 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $spResourceRequest = $this->getMock('Saml\Ecp\Request\RequestInterface');
         
         $spInitialResponse = $this->getMock('Saml\Ecp\Response\ResponseInterface');
-        $idpAuthnResponse = $this->getMockBuilder('Saml\Ecp\Response\IdpAuthnResponse')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $idpAuthnResponse = $this->getMock('Saml\Ecp\Response\AuthnResponseInterface');
         $idpAuthnResponse->expects($this->once())
             ->method('getConsumerEndpointUrl')
             ->will($this->returnValue($consumerEndpointUrl));
+        
         $spConveyResponse = $this->getMock('Saml\Ecp\Response\ResponseInterface');
         $spResourceResponse = $this->getMock('Saml\Ecp\Response\ResponseInterface');
         

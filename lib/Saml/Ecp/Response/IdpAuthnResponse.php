@@ -9,17 +9,15 @@ use Saml\Ecp\Soap\Message\AuthnResponse;
  * The response sent by the IdP after sending the authn request.
  *
  */
-class IdpAuthnResponse extends AbstractResponse
+class IdpAuthnResponse extends AbstractResponse implements AuthnResponseInterface
 {
 
 
     /**
-     * Returns the SP endpoint to which the response needs to be delivered.
-     * 
-     * @throws Exception\InvalidResponseException
-     * @return string
+     * {@inhertidoc}
+     * @see \Saml\Ecp\Response\AuthnResponseInterface::getConsumerEndpointUrl()
      */
-    public function getConsumerEndpointUrl ()
+    public function getConsumerEndpointUrl()
     {
         $url = $this->getSoapMessage()
             ->getAssertionConsumerServiceUrl();
@@ -32,10 +30,10 @@ class IdpAuthnResponse extends AbstractResponse
 
 
     /**
-     * (non-PHPdoc)
+     * {@inheritdoc}
      * @see \Saml\Ecp\Response\AbstractResponse::_createSoapMessage()
      */
-    protected function _createSoapMessage ($content)
+    protected function _createSoapMessage($content)
     {
         return new AuthnResponse($content);
     }
