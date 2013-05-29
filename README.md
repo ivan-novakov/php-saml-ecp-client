@@ -12,6 +12,14 @@ This library tries to follow the ECP profile specification. Currently, it doesn'
 * Zend Framework >= 2.*
 * Shibboleth SP/IdP
 
+## Installation
+
+If you use [composer](http://getcomposer.org/) in your project, you can just add the following requirement to your `composer.json` file:
+
+    "ivan-novakov/php-saml-ecp-client": "dev-master"
+    
+Otherwise, clone the repository and configure your autoloader to look for the _Saml_ namespace in the `lib/` directory of the repository.
+
 ## Basic usage
 
     use Saml\Ecp\Flow;
