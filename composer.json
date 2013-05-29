@@ -1,17 +1,22 @@
 {
     "name" : "ivan-novakov/php-saml-ecp-client",
     "description" : "SAML ECP client implementation in PHP",
-
-    "repositories" : [
+    "type" : "library",
+    "keywords" : [
+        "saml", "ecp", "authentication", "shibboleth"
+    ],
+    "homepage" : "https://github.com/ivan-novakov/php-saml-ecp-client",
+    "license" : "BSD-3-Clause",
+    "authors" : [
         {
-            "type" : "composer",
-            "url" : "http://packages.zendframework.com/"
+            "name" : "Ivan Novakov",
+            "homepage" : "http://novakov.cz/"
         }
     ],
 
     "require" : {
         "php" : ">=5.3.3",
-        "zendframework/zendframework" : "2.*"
+        "zendframework/zendframework" : ">=2.1.0"
     },
 
     "autoload" : {

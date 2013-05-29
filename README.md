@@ -145,7 +145,7 @@ Response validation is achieved through validators created by the _Saml\Ecp\Resp
 
 ## Licence
 
-* [FreeBSD](http://debug.cz/license/freebsd)
+* [BSD 3 Clause](http://debug.cz/license/bsd-3-clause)
 
 ## Links
 
