@@ -1,5 +1,7 @@
 # PHP SAML ECP Client
 
+[![Dependency Status](https://www.versioneye.com/user/projects/529a014c632bac5a0a000018/badge.png)](https://www.versioneye.com/user/projects/529a014c632bac5a0a000018)
+
 ## Introduction
 
 As described in the current [specification draft](https://wiki.oasis-open.org/security/SAML2EnhancedClientProfile), the SAML V2.0 Enhanced Client or Proxy (ECP) profile is a SSO profile for use with HTTP, and clients with the capability to directly contact a principal's identity provider(s) without requiring discovery and redirection by the service provider, as in the case of a browser. It is particularly useful for desktop or server-side HTTP clients.
